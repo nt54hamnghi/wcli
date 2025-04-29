@@ -1,0 +1,34 @@
+{
+	"rust-analyzer.inlayHints.genericParameterHints.type.enable": true,
+	"rust-analyzer.inlayHints.typeHints.hideNamedConstructor": false,
+	"rust-analyzer.rustfmt.overrideCommand": [
+		"leptosfmt",
+		"--stdin",
+		"--rustfmt"
+	],
+	"rust-analyzer.check.command": "clippy",
+	"editor.inlayHints.enabled": "onUnlessPressed",
+	"editor.formatOnSave": true,
+	"[rust]": {
+		"editor.defaultFormatter": "rust-lang.rust-analyzer"
+	},
+	"files.associations": {
+		"*.rs": "rust"
+	},
+	// https://github.com/tailwindlabs/tailwindcss/discussions/13157#discussioncomment-10060258
+	"emmet.includeLanguages": {
+		"rust": "html",
+		"*.rs": "html"
+	},
+	"tailwindCSS.includeLanguages": {
+		"rust": "html",
+		"*.rs": "html"
+	},
+	"editor.quickSuggestions": {
+		"other": "on",
+		"comments": "on",
+		"strings": true
+	},
+	"css.validate": false,
+	"workbench.colorTheme": "Ayu Mirage Bordered"
+}
