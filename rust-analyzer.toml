@@ -1,2 +1,7 @@
 [rustfmt]
-overrideCommand = ["leptosfmt", "--stdin", "--rustfmt"]
+overrideCommand = [
+    "leptosfmt",
+    "--stdin",
+    "--rustfmt",
+    "--experimental-tailwind",
+]

@@ -1,5 +1,5 @@
 fmt:
-	cargo +nightly fmt && leptosfmt ./**/*.rs
+	leptosfmt ./**/*.rs --experimental-tailwind && cargo +nightly fmt
 
 alias f := fmt
 
