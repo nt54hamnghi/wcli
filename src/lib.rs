@@ -1,5 +1,6 @@
 use leptos::prelude::*;
-use leptos_router::{components::*, path};
+use leptos_router::components::{Route, Router, Routes};
+use leptos_router::path;
 
 // Modules
 mod components;
