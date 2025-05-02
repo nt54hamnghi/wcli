@@ -11,16 +11,16 @@ pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl Int
 
     view! {
         <div>
-            <span
+            <div
                 class="text-white"
                 on:click=move |_| {
                     input_element.get().expect("should be mounted").focus().unwrap();
                 }
             >
                 <span>{before}</span>
-                <span class="text-center bg-white">"_"</span>
+                <span class="text-center bg-white opacity-70">"."</span>
                 <span>{after}</span>
-            </span>
+            </div>
             <input
                 type="text"
                 class="sr-only"
@@ -28,14 +28,28 @@ pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl Int
                 node_ref=input_element
                 prop:value=input
                 on:input:target=move |e| {
-                    set_input.set(e.target().value());
-                    set_position.set(input.read().len());
+                    let value = e.target().value();
+                    let diff = (value.len() as isize) - (input.read().len() as isize);
+                    set_position.update(|p| *p = p.saturating_add_signed(diff));
+                    set_input.set(value);
                 }
                 on:keydown:target=move |e| {
-                    if e.key() == "Enter" {
-                        on_enter(input);
-                        set_input.write().clear();
-                        set_position.set(0);
+                    match e.key().as_str() {
+                        "Enter" => {
+                            on_enter(input);
+                            set_input.write().clear();
+                            set_position.set(0);
+                        }
+                        "ArrowLeft" => {
+                            set_position.update(|p| { *p = p.saturating_sub(1) });
+                        }
+                        "ArrowRight" => {
+                            set_position
+                                .update(|p| { *p = p.saturating_add(1).min(input.read().len()) });
+                        }
+                        "Home" => {}
+                        "End" => {}
+                        _ => {}
                     }
                 }
             />
