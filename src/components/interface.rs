@@ -41,11 +41,9 @@ pub fn Interface() -> impl IntoView {
             </For>
             <div class="flex gap-4 items-center">
                 <Prompt />
-                <Input
-                    on_enter=move |v| set_history.write().push(Action::new(v.get_untracked()))
-                    {..}
-                    class="flex-1 text-white"
-                />
+                <Input on_enter=move |v| {
+                    set_history.write().push(Action::new(v.get_untracked()));
+                } />
             </div>
         </div>
     }
