@@ -17,14 +17,14 @@ pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl Int
                     input_element.get().expect("should be mounted").focus().unwrap();
                 }
             >
-                <span>{before}</span>
+                <pre class="inline">{before}</pre>
                 // Vertically center this span using top-1/2 and -translate-y-1/2
                 // top-1/2 moves the top-left corner down to the middle of the parent's height
                 // -translate-y-1/2 moves the element up by haft of its height
-                <span class="inline-block absolute top-1/2 text-center bg-white opacity-50 duration-100 -translate-y-1/2 animate-blink h-[1.125em]">
+                <span class="inline-block absolute top-1/2 text-center bg-white opacity-50 -translate-y-1/2 animate-blink h-[1.125em]">
                     "."
                 </span>
-                <span>{after}</span>
+                <pre class="inline">{after}</pre>
             </div>
             <input
                 type="text"
