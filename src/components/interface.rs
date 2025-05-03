@@ -1,3 +1,4 @@
+use leptos::html;
 use leptos::prelude::*;
 use web_sys::js_sys;
 
@@ -24,8 +25,20 @@ impl Action {
 #[component]
 pub fn Interface() -> impl IntoView {
     let (history, set_history) = signal(Vec::<Action>::new());
+    let (input, set_input) = signal("".to_owned());
+
+    let div_ref: NodeRef<html::Div> = NodeRef::new();
+    let scroll_right = move || {
+        let div = div_ref.get().expect("should be mounted");
+        div.scroll_to_with_x_and_y(div.scroll_width() as f64, 0.0);
+    };
+    let scroll_left = move || {
+        let div = div_ref.get().expect("should be mounted");
+        div.scroll_to_with_x_and_y(0.0, 0.0);
+    };
+
     view! {
-        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-gray-900">
+        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-gray-900" node_ref=div_ref>
             <For each=move || history.get() key=move |action| action.timestamp let(action)>
                 {
                     view! {
@@ -41,9 +54,28 @@ pub fn Interface() -> impl IntoView {
             </For>
             <div class="flex gap-4 items-center">
                 <Prompt />
-                <Input on_enter=move |v| {
-                    set_history.write().push(Action::new(v.get_untracked()));
-                } />
+                <Input
+                    value=input
+                    // FIXME: this would scroll right even when
+                    // the change happens at the start of input
+                    on_input=move |e| {
+                        set_input.set(e.target().value());
+                        scroll_right();
+                    }
+                    on_keydown=move |e| {
+                        match e.key().as_str() {
+                            "Enter" => {
+                                set_history.write().push(Action::new(input.get()));
+                                set_input.write().clear();
+                            }
+                            "ArrowLeft" => {}
+                            "ArrowRight" => {}
+                            "Home" => scroll_left(),
+                            "End" => scroll_right(),
+                            _ => {}
+                        };
+                    }
+                />
             </div>
         </div>
     }
