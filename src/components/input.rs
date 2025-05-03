@@ -4,6 +4,7 @@ use leptos::prelude::*;
 #[component]
 pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl IntoView {
     let (input, set_input) = signal(String::new());
+
     let (position, set_position) = signal(0);
     let (before, after) = split_at(input, position);
 
@@ -12,19 +13,19 @@ pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl Int
     view! {
         <div>
             <div
-                class="relative text-white"
+                class="relative text-white whitespace-pre"
                 on:click=move |_| {
                     input_element.get().expect("should be mounted").focus().unwrap();
                 }
             >
-                <pre class="inline">{before}</pre>
+                <span>{before}</span>
                 // Vertically center this span using top-1/2 and -translate-y-1/2
                 // top-1/2 moves the top-left corner down to the middle of the parent's height
                 // -translate-y-1/2 moves the element up by haft of its height
-                <span class="inline-block absolute top-1/2 text-center bg-white opacity-50 -translate-y-1/2 animate-blink h-[1.125em]">
+                <span class="inline-block absolute top-1/2 bg-white -translate-y-1/2 animate-blink h-[1.125em]">
                     "."
                 </span>
-                <pre class="inline">{after}</pre>
+                <span>{after}</span>
             </div>
             <input
                 type="text"
@@ -39,21 +40,19 @@ pub(super) fn Input(on_enter: impl Fn(ReadSignal<String>) + 'static) -> impl Int
                     set_input.set(value);
                 }
                 on:keydown:target=move |e| {
+                    let len = input.read().len();
                     match e.key().as_str() {
                         "Enter" => {
                             on_enter(input);
                             set_input.write().clear();
                             set_position.set(0);
                         }
-                        "ArrowLeft" => {
-                            set_position.update(|p| { *p = p.saturating_sub(1) });
-                        }
+                        "ArrowLeft" => set_position.update(|p| { *p = p.saturating_sub(1) }),
                         "ArrowRight" => {
-                            set_position
-                                .update(|p| { *p = p.saturating_add(1).min(input.read().len()) });
+                            set_position.update(|p| { *p = p.saturating_add(1).min(len) })
                         }
-                        "Home" => {}
-                        "End" => {}
+                        "Home" => set_position.set(0),
+                        "End" => set_position.set(len),
                         _ => {}
                     }
                 }

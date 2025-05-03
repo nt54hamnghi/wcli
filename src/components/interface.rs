@@ -32,7 +32,7 @@ pub fn Interface() -> impl IntoView {
                         <div>
                             <div class="flex gap-4 items-center">
                                 <Prompt />
-                                <p class="flex-1 text-white">{action.input}</p>
+                                <p class="flex-1 text-white whitespace-pre">{action.input}</p>
                             </div>
                             <p class="text-white">{action.output}</p>
                         </div>
