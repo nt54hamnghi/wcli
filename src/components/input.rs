@@ -19,6 +19,7 @@ pub(super) fn Input(
     on_keydown: impl Fn(Targeted<KeyboardEvent, HtmlInputElement>) + 'static,
 ) -> impl IntoView {
     let (position, set_position) = signal(0);
+    let (is_blinking, set_is_blinking) = signal(false);
     let (before, after) = split_at(value, position);
 
     let input_ref: NodeRef<html::Input> = NodeRef::new();
@@ -56,9 +57,12 @@ pub(super) fn Input(
                 <span node_ref=span_ref_before>{before}</span>
                 // top-1/2 moves the top-left corner down to the middle of the parent's height
                 // -translate-y-1/2 moves the element up by haft of its height
-                <span class="inline-block absolute top-1/2 bg-white -translate-y-1/2 h-[1.125em] animate-blink">
-                    "."
-                </span>
+                <span class=move || {
+                    format!(
+                        "inline-block absolute top-1/2 bg-white -translate-y-1/2 h-[1.125em] {}",
+                        if is_blinking.get() { "animate-blink" } else { "" },
+                    )
+                }>"."</span>
                 <span>{after}</span>
             </div>
             <input
@@ -67,6 +71,8 @@ pub(super) fn Input(
                 autofocus
                 node_ref=input_ref
                 prop:value=value
+                on:focus=move |_| set_is_blinking.set(true)
+                on:blur=move |_| set_is_blinking.set(false)
                 on:input:target=move |e| {
                     {
                         let new = e.target().value();
