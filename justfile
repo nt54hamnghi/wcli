@@ -12,4 +12,4 @@ fix:
     cargo clippy --fix 
 
 dev:
-    RUSTFLAGS="--cfg erase_components" trunk serve --port 3000 --open
+    RUSTFLAGS="--cfg erase_components" trunk serve --open
