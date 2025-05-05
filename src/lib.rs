@@ -5,6 +5,7 @@ use leptos_router::path;
 // Modules
 mod components;
 mod pages;
+mod shell;
 
 // Top-Level pages
 use pages::home::Home;

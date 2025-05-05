@@ -1,49 +1,19 @@
 use leptos::html;
 use leptos::prelude::*;
-use web_sys::js_sys;
 
+use super::history::{Entry, History};
 use super::input::Input;
-
-#[derive(Debug, Clone)]
-struct Action {
-    timestamp: u64,
-    input: String,
-    output: String,
-}
-
-impl Action {
-    fn new(output: String) -> Self {
-        let timestamp = (js_sys::Date::now() / 1000.0).round() as u64;
-        Self {
-            timestamp,
-            input: output,
-            output: "command not found".to_owned(),
-        }
-    }
-}
+use super::prompt::Prompt;
 
 #[component]
 pub fn Interface() -> impl IntoView {
-    let (history, set_history) = signal(Vec::<Action>::new());
+    let (history, set_history) = signal(Vec::<Entry>::new());
     let (input, set_input) = signal("".to_owned());
-
     let div_ref: NodeRef<html::Div> = NodeRef::new();
 
     view! {
-        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-gray-900" node_ref=div_ref>
-            <For each=move || history.get() key=move |action| action.timestamp let(action)>
-                {
-                    view! {
-                        <div>
-                            <div class="flex gap-4 items-center">
-                                <Prompt />
-                                <p class="flex-1 text-white whitespace-pre">{action.input}</p>
-                            </div>
-                            <p class="text-white">{action.output}</p>
-                        </div>
-                    }
-                }
-            </For>
+        <div class="flex overflow-auto flex-col gap-4 p-4 h-screen bg-gray-900" node_ref=div_ref>
+            <History history=history />
             <div class="flex gap-4 items-center">
                 <Prompt />
                 <Input
@@ -55,7 +25,7 @@ pub fn Interface() -> impl IntoView {
                     on_keydown=move |e| {
                         match e.key().as_str() {
                             "Enter" => {
-                                set_history.write().push(Action::new(input.get()));
+                                set_history.write().push(Entry::new(input.get()));
                                 set_input.write().clear();
                             }
                             "ArrowLeft" => {}
@@ -65,22 +35,6 @@ pub fn Interface() -> impl IntoView {
                     }
                 />
             </div>
-        </div>
-    }
-}
-
-#[component]
-fn Prompt(
-    #[prop(default = "guess")] user: &'static str,
-    #[prop(default = "host")] host: &'static str,
-    #[prop(default = ":~$")] prefix: &'static str,
-) -> impl IntoView {
-    view! {
-        <div class="inline-block text-white whitespace-nowrap">
-            <span>{user}</span>
-            <span class="text-red-400">@</span>
-            <span>{host}</span>
-            <span class="text-green-400">{prefix}</span>
         </div>
     }
 }

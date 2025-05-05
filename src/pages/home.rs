@@ -24,7 +24,6 @@ pub fn Home() -> impl IntoView {
                 </ul>
             }
         }>
-
             <Interface />
         </ErrorBoundary>
     }
