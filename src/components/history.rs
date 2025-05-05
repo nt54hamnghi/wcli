@@ -1,27 +1,15 @@
 use leptos::prelude::*;
-use web_sys::js_sys;
 
 use crate::shell::dispatch;
+use crate::stores::history::use_history;
 
 use super::prompt::Prompt;
 
-#[derive(Debug, Clone)]
-pub struct Entry {
-    pub timestamp: u64,
-    pub input: String,
-}
-
-impl Entry {
-    pub fn new(input: String) -> Self {
-        let timestamp = (js_sys::Date::now() / 1000.0).round() as u64;
-        Self { timestamp, input }
-    }
-}
-
 #[component]
-pub fn History(history: ReadSignal<Vec<Entry>>) -> impl IntoView {
+pub fn History() -> impl IntoView {
+    let (history, _set_history) = use_history().expect("not yet created");
     view! {
-        <For each=move || history.get() key=move |entry| entry.timestamp let(entry)>
+        <For each=move || history.get() key=move |entry| entry.id() let(entry)>
             {
                 view! {
                     <div>

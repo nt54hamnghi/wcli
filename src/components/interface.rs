@@ -1,19 +1,21 @@
 use leptos::html;
 use leptos::prelude::*;
 
-use super::history::{Entry, History};
+use crate::stores::history::{create_history, Entry};
+
+use super::history::History;
 use super::input::Input;
 use super::prompt::Prompt;
 
 #[component]
 pub fn Interface() -> impl IntoView {
-    let (history, set_history) = signal(Vec::<Entry>::new());
+    let (_history, set_history) = create_history();
     let (input, set_input) = signal("".to_owned());
     let div_ref: NodeRef<html::Div> = NodeRef::new();
 
     view! {
-        <div class="flex overflow-auto flex-col gap-4 p-4 h-screen bg-gray-900" node_ref=div_ref>
-            <History history=history />
+        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-gray-900" node_ref=div_ref>
+            <History />
             <div class="flex gap-4 items-center">
                 <Prompt />
                 <Input
