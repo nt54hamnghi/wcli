@@ -24,7 +24,7 @@ pub fn Home() -> impl IntoView {
                 </ul>
             }
         }>
-            <Interface />
+            <Interface {..} id="theme-kanagawa" />
         </ErrorBoundary>
     }
 }

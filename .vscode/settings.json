@@ -29,6 +29,5 @@
 		"comments": "on",
 		"strings": true
 	},
-	"css.validate": false,
-	"workbench.colorTheme": "Ayu Mirage Bordered"
+	"css.validate": false
 }

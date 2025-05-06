@@ -1,20 +1,21 @@
 use std::str::FromStr;
 
 use super::Palette;
-use super::{Command, echo::Echo};
+use super::{echo::Echo, Command};
 use leptos::prelude::*;
 use strum::IntoEnumIterator;
 
 impl Palette {
-    fn one_line(&self) -> impl IntoView + use<> {
+    /// Returns a one-line description
+    fn one_line(self) -> impl IntoView {
         let (name, desc) = match self {
             Self::Echo => (Echo::NAME, Echo::DESCRIPTION),
             Self::Help => (Help::NAME, Help::DESCRIPTION),
         };
 
         view! {
-            <div class="text-white">
-                <span class="text-green-400">{name}</span>
+            <div class="text-base">
+                <span class="text-green-theme">{name}</span>
                 <span>" - " {desc}</span>
             </div>
         }
@@ -28,10 +29,9 @@ impl Command for Help {
     const NAME: &'static str = "help";
     const DESCRIPTION: &'static str = "show help message";
     const USAGE: &'static str = r#"
-    help  - show the overview help
+    help - show the overview help
     help [COMMAND] - show help for a specific command"#;
 
-    #[allow(clippy::useless_vec)]
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();

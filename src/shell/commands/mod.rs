@@ -20,9 +20,9 @@ pub trait Command {
 
     fn help() -> impl IntoView {
         view! {
-            <div class="text-white">
+            <div class="text-base">
                 <p>
-                    <span class="text-green-400">{Self::NAME}</span>
+                    <span class="text-green-theme">{Self::NAME}</span>
                     <span>" - " {Self::DESCRIPTION}</span>
                 </p>
                 <p class="mt-4">"Usage:"</p>

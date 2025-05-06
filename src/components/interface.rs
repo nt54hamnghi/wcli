@@ -14,7 +14,7 @@ pub fn Interface() -> impl IntoView {
     let div_ref: NodeRef<html::Div> = NodeRef::new();
 
     view! {
-        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-gray-900" node_ref=div_ref>
+        <div class="flex overflow-auto flex-col gap-6 p-4 h-screen bg-surface" node_ref=div_ref>
             <History />
             <div class="flex gap-4 items-center">
                 <Prompt />

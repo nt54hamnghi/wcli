@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@theme {
+@theme inline {
 	--animate-blink: blink 1s linear infinite;
 	@keyframes blink {
 		0%,
@@ -11,4 +11,62 @@
 			opacity: 0;
 		}
 	}
+
+	--color-base: var(--color-white);
+	--color-primary: var(--color-primary);
+	--color-pass: var(--color-green);
+	--color-warn: var(--color-yellow);
+	--color-fail: var(--color-red);
+	--color-info: var(--color-blue);
+	--color-surface: var(--color-black);
+
+	--color-red-theme: var(--color-red);
+	--color-orange-theme: var(--color-orange);
+	--color-yellow-theme: var(--color-yellow);
+	--color-green-theme: var(--color-green);
+	--color-blue-theme: var(--color-blue);
+	--color-indigo-theme: var(--color-indigo);
+	--color-violet-theme: var(--color-violet);
+}
+
+#theme-catppuccin {
+	--color-primary: #f2cdcd;
+	--color-black: #1e1e2e;
+	--color-white: #cdd6f4;
+
+	--color-red: #f38ba8;
+	--color-orange: #fab387;
+	--color-yellow: #f9e2af;
+	--color-green: #a6e3a1;
+	--color-blue: #74c7ec;
+	--color-indigo: #89b4fa;
+	--color-violet: #cba6f7;
+}
+
+#theme-everforest {
+	--color-primary: #9aa79d;
+	--color-black: #2d353b;
+	--color-white: #d3c6aa;
+
+	--color-red: #e67e80;
+	--color-orange: #e69875;
+	--color-yellow: #dbbc7f;
+	--color-green: #a7c080;
+	--color-blue: #7fbbb3;
+	--color-indigo: #83c092;
+	--color-violet: #d699b6;
+}
+
+#theme-kanagawa {
+	--color-primary: #dcd7ba;
+	--color-black: #1f1f28;
+	--color-white: #c8c093;
+
+	--color-red: #ff5d62;
+	--color-orange: #ff9e3b;
+	--color-yellow: #e6c384;
+	--color-green: #76946a;
+	--color-blue: #7e9cd8;
+	--color-indigo: #957fb8;
+	--color-violet: #d27e99;
 }

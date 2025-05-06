@@ -49,7 +49,7 @@ pub(super) fn Input(
     view! {
         <div class="pr-12">
             <div
-                class="relative text-white whitespace-pre"
+                class="relative text-base whitespace-pre"
                 on:click=move |_| {
                     input_ref.get().expect("should be mounted").focus().unwrap();
                 }
@@ -59,10 +59,10 @@ pub(super) fn Input(
                 // -translate-y-1/2 moves the element up by haft of its height
                 <span class=move || {
                     format!(
-                        "inline-block absolute top-1/2 bg-white -translate-y-1/2 h-[1.125em] {}",
+                        "inline-block absolute top-1/2 bg-base -translate-y-1/2 h-[1.125em] {}",
                         if is_blinking.get() { "animate-blink" } else { "" },
                     )
-                }>"."</span>
+                }>" "</span>
                 <span>{after}</span>
             </div>
             <input

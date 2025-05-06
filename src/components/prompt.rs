@@ -8,15 +8,15 @@ pub fn Prompt(
     #[prop(optional)] value: String,
 ) -> impl IntoView {
     view! {
-        <div class="flex gap-4 items-center">
-            <div class="inline-block text-white whitespace-nowrap">
+        <div class="flex gap-4 items-center text-base">
+            <div class="inline-block whitespace-nowrap">
                 <span>{user}</span>
-                <span class="text-red-400">@</span>
+                <span class="text-red-theme">@</span>
                 <span>{host}</span>
-                <span class="text-green-400">{prefix}</span>
+                <span class="text-green-theme">{prefix}</span>
             </div>
             {(!value.is_empty())
-                .then(|| view! { <span class="flex-1 text-white whitespace-pre">{value}</span> })}
+                .then(|| view! { <span class="flex-1 whitespace-pre">{value}</span> })}
         </div>
     }
 }
