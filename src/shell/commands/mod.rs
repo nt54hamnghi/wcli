@@ -3,12 +3,14 @@ use strum::{EnumIter, EnumString};
 
 pub mod echo;
 pub mod help;
+pub mod theme;
 
 #[derive(Debug, Clone, Copy, EnumString, EnumIter)]
 #[strum(serialize_all = "snake_case")]
 pub enum Palette {
     Echo,
     Help,
+    Theme,
 }
 
 pub trait Command {

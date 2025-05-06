@@ -1,10 +1,12 @@
 use components::interface::Interface;
 use leptos::prelude::*;
+use theme::create_theme;
 
 // Modules
 mod components;
 mod shell;
 mod stores;
+mod theme;
 
 /// An app router which renders the homepage and handles 404's
 #[component]
@@ -15,6 +17,8 @@ pub fn App() -> impl IntoView {
 /// Default Home Page
 #[component]
 fn Home() -> impl IntoView {
+    let (theme, _set_theme) = create_theme();
+
     view! {
         <ErrorBoundary fallback=|errors| {
             view! {
@@ -36,7 +40,7 @@ fn Home() -> impl IntoView {
                 </div>
             }
         }>
-            <Interface {..} id="theme-kanagawa" />
+            <Interface {..} id=move || { format!("theme-{}", theme.get()) } />
         </ErrorBoundary>
     }
 }

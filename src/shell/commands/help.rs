@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use super::Palette;
-use super::{echo::Echo, Command};
+use super::{Command, echo::Echo, theme::Theme};
 use leptos::prelude::*;
 use strum::IntoEnumIterator;
 
@@ -11,6 +11,7 @@ impl Palette {
         let (name, desc) = match self {
             Self::Echo => (Echo::NAME, Echo::DESCRIPTION),
             Self::Help => (Help::NAME, Help::DESCRIPTION),
+            Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
         };
 
         view! {
@@ -43,6 +44,7 @@ impl Command for Help {
                 Ok(cmd) => match cmd {
                     Palette::Echo => Echo::help().into_any(),
                     Palette::Help => Help::help().into_any(),
+                    Palette::Theme => Theme::help().into_any(),
                 },
                 Err(_) => todo!(),
             }

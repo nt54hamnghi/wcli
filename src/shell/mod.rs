@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use commands::echo::Echo;
 use commands::help::Help;
+use commands::theme::Theme;
 use commands::{Command, Palette};
 use leptos::prelude::*;
 
@@ -24,6 +25,7 @@ pub fn dispatch(input: String) -> impl IntoView {
         Ok(cmd) => match cmd {
             Palette::Echo => Echo::run(args).into_any(),
             Palette::Help => Help::run(args).into_any(),
+            Palette::Theme => Theme::run(args).into_any(),
         },
         Err(_) => not_found(cmd).into_any(),
     }

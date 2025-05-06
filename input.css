@@ -70,3 +70,59 @@
 	--color-indigo: #957fb8;
 	--color-violet: #d27e99;
 }
+
+#theme-nord {
+	--color-primary: #8fbcbb;
+	--color-black: #2e3440;
+	--color-white: #eceff4;
+
+	--color-red: #bf616a;
+	--color-orange: #d08770;
+	--color-yellow: #ebcb8b;
+	--color-green: #a3be8c;
+	--color-blue: #81a1c1;
+	--color-indigo: #88c0d0;
+	--color-violet: #b48ead;
+}
+
+#theme-dracula {
+	--color-primary: #ff79c6;
+	--color-black: #282a36;
+	--color-white: #ffffff;
+
+	--color-red: #ff5555;
+	--color-orange: #ffb86c;
+	--color-yellow: #f1fa8c;
+	--color-green: #50fa7b;
+	--color-blue: #8be9fd;
+	--color-indigo: #bd93f9;
+	--color-violet: #ff79c6;
+}
+
+#theme-tokyo_night {
+	--color-primary: #3d59a1;
+	--color-black: #1b1e2e;
+	--color-white: #ffffff;
+
+	--color-red: #f7768e;
+	--color-orange: #ff9e64;
+	--color-yellow: #e0af68;
+	--color-green: #73daca;
+	--color-blue: #7aa2f7;
+	--color-indigo: #698cd6;
+	--color-violet: #bb9af7;
+}
+
+#theme-github {
+	--color-primary: #f78166;
+	--color-black: #0d1117;
+	--color-white: #c9d1d9;
+
+	--color-red: #ff7b72;
+	--color-orange: #ffa657;
+	--color-yellow: #d29922;
+	--color-green: #3fb950;
+	--color-blue: #58a6ff;
+	--color-indigo: #79c0ff;
+	--color-violet: #bc8cff;
+}
