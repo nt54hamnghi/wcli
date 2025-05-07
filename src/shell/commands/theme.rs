@@ -24,6 +24,7 @@ impl Command for Theme {
             ThemeChoice::random()
         } else {
             let value = args.first().expect("has at least 1 item");
+
             match ThemeChoice::from_str(value.as_str()) {
                 Ok(t) => t,
                 Err(_) => {

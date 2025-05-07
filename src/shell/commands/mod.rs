@@ -1,11 +1,11 @@
 use leptos::prelude::*;
-use strum::{EnumIter, EnumString};
+use strum::{Display, EnumIter, EnumString};
 
 pub mod echo;
 pub mod help;
 pub mod theme;
 
-#[derive(Debug, Clone, Copy, EnumString, EnumIter)]
+#[derive(Debug, Clone, Copy, EnumString, EnumIter, Display)]
 #[strum(serialize_all = "snake_case")]
 pub enum Palette {
     Echo,

@@ -46,7 +46,23 @@ impl Command for Help {
                     Palette::Help => Help::help().into_any(),
                     Palette::Theme => Theme::help().into_any(),
                 },
-                Err(_) => todo!(),
+                Err(_) => {
+                    return Some(
+                        view! {
+                            <div class="text-fail">
+                                <p>{format!("command '{cmd}' is not supported")}</p>
+                                <p>
+                                    "available commands: "
+                                    {Palette::iter()
+                                        .map(|t| t.to_string())
+                                        .collect::<Vec<_>>()
+                                        .join(", ")}
+                                </p>
+                            </div>
+                        }
+                        .into_any(),
+                    );
+                }
             }
         };
 
