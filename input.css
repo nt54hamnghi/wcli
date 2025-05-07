@@ -13,12 +13,15 @@
 	}
 
 	--color-base: var(--color-white);
+	--color-muted: #bac2de;
 	--color-primary: var(--color-primary);
 	--color-pass: var(--color-green);
 	--color-warn: var(--color-yellow);
 	--color-fail: var(--color-red);
 	--color-info: var(--color-blue);
 	--color-surface: var(--color-black);
+	--color-focus: var(--color-primary);
+	--color-unfocus: var(--color-black);
 
 	--color-red-theme: var(--color-red);
 	--color-orange-theme: var(--color-orange);
@@ -86,7 +89,7 @@
 }
 
 #theme-dracula {
-	--color-primary: #ff79c6;
+	--color-primary: #bd93f9;
 	--color-black: #282a36;
 	--color-white: #ffffff;
 
@@ -100,7 +103,7 @@
 }
 
 #theme-tokyo_night {
-	--color-primary: #3d59a1;
+	--color-primary: #73daca;
 	--color-black: #1b1e2e;
 	--color-white: #ffffff;
 

@@ -1,9 +1,19 @@
 use leptos::ev::Targeted;
 use leptos::html;
 use leptos::prelude::*;
+use leptos::wasm_bindgen::JsCast;
 use web_sys::Event;
 use web_sys::HtmlInputElement;
 use web_sys::KeyboardEvent;
+
+const INPUT_ID: &str = "sole-input";
+
+pub fn get_input_element() -> HtmlInputElement {
+    document()
+        .get_element_by_id(INPUT_ID)
+        .expect("<input /> with id should exist")
+        .unchecked_into()
+}
 
 /// Terminal-style input component with block cursor and scroll support
 #[component]
@@ -67,6 +77,7 @@ pub(super) fn Input(
             </div>
             <input
                 type="text"
+                id=INPUT_ID
                 class="sr-only"
                 autofocus
                 node_ref=input_ref
