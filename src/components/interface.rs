@@ -3,7 +3,7 @@ use leptos::prelude::*;
 use web_sys::MouseEvent;
 
 use crate::components::input::get_input_element;
-use crate::stores::history::{Entry, create_history};
+use crate::stores::history::{create_history, Entry};
 
 use super::history::History;
 use super::input::Input;
@@ -23,10 +23,14 @@ pub fn Interface() -> impl IntoView {
         get_input_element().blur().expect("should be focusable");
     };
 
+    let scroll_bottom = move || {
+        let div = div_ref.get().expect("should be mounted");
+        div.scroll_to_with_x_and_y(0.0, div.scroll_height() as f64);
+    };
+
     Effect::new(move || {
         if !history.read().is_empty() {
-            let div = div_ref.get().expect("should be mounted");
-            div.scroll_to_with_x_and_y(0.0, div.scroll_height() as f64);
+            scroll_bottom();
         }
     });
 
@@ -45,6 +49,7 @@ pub fn Interface() -> impl IntoView {
                     value=input
                     scroll_ref=div_ref
                     on_input=move |e| {
+                        scroll_bottom();
                         set_input.set(e.target().value());
                     }
                     on_keydown=move |e| {
