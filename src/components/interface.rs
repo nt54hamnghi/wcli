@@ -32,7 +32,7 @@ pub fn Interface() -> impl IntoView {
 
     view! {
         <div
-            class="flex overflow-auto flex-col gap-6 p-4 pb-12 h-screen text-base border-3 bg-surface box-border border-unfocus focus-within:border-primary"
+            class="flex overflow-auto flex-col gap-6 p-4 pb-12 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus focus-within:border-primary"
             node_ref=div_ref
             on:mouseup=focus
             on:mouseenter=focus
