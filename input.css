@@ -147,3 +147,19 @@ html {
 	--color-indigo: #79c0ff;
 	--color-violet: #bc8cff;
 }
+
+#theme-houston {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
+	--color-primary: #4bf3c8;
+	--color-black: #17191e;
+	--color-white: #cccccc;
+
+	--color-red: #f4587e;
+	--color-orange: #ff8551;
+	--color-yellow: #ffd493;
+	--color-green: #23d18b;
+	--color-blue: #00daef;
+	--color-indigo: #54b9ff;
+	--color-violet: #cc75f4;
+}

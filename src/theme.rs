@@ -12,6 +12,7 @@ pub enum Theme {
     Dracula,
     TokyoNight,
     Github,
+    Houston,
 }
 
 impl Theme {

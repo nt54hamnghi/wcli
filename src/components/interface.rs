@@ -3,7 +3,7 @@ use leptos::prelude::*;
 use web_sys::MouseEvent;
 
 use crate::components::input::get_input_element;
-use crate::stores::history::{create_history, Entry};
+use crate::stores::history::{Entry, create_history};
 
 use super::history::History;
 use super::input::Input;

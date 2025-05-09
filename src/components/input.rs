@@ -2,9 +2,7 @@ use leptos::ev::Targeted;
 use leptos::html;
 use leptos::prelude::*;
 use leptos::wasm_bindgen::JsCast;
-use web_sys::Event;
-use web_sys::HtmlInputElement;
-use web_sys::KeyboardEvent;
+use web_sys::{Event, HtmlInputElement, KeyboardEvent};
 
 const INPUT_ID: &str = "sole-input";
 
