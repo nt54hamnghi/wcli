@@ -2,11 +2,11 @@ use leptos::html;
 use leptos::prelude::*;
 use web_sys::MouseEvent;
 
-use crate::components::input::get_input_element;
-use crate::stores::history::{create_history, Entry};
+use crate::stores::history::{Entry, create_history};
 
+use super::banner::Banner;
 use super::history::History;
-use super::input::Input;
+use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
 
 #[component]
@@ -42,6 +42,7 @@ pub fn Interface() -> impl IntoView {
             on:mouseenter=focus
             on:mouseleave=blur
         >
+            <Banner />
             <History />
             <div class="flex gap-4 items-center">
                 <Prompt />

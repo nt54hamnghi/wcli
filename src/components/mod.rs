@@ -1,3 +1,4 @@
+mod banner;
 mod history;
 mod input;
 pub mod interface;
