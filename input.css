@@ -32,7 +32,13 @@
 	--color-violet-theme: var(--color-violet);
 }
 
+html {
+	scrollbar-width: thin;
+}
+
 #theme-catppuccin {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #f2cdcd;
 	--color-black: #1e1e2e;
 	--color-white: #cdd6f4;
@@ -47,6 +53,8 @@
 }
 
 #theme-everforest {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #9aa79d;
 	--color-black: #2d353b;
 	--color-white: #d3c6aa;
@@ -61,6 +69,8 @@
 }
 
 #theme-kanagawa {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #dcd7ba;
 	--color-black: #1f1f28;
 	--color-white: #c8c093;
@@ -75,6 +85,8 @@
 }
 
 #theme-nord {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #8fbcbb;
 	--color-black: #2e3440;
 	--color-white: #eceff4;
@@ -89,6 +101,8 @@
 }
 
 #theme-dracula {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #bd93f9;
 	--color-black: #282a36;
 	--color-white: #ffffff;
@@ -103,6 +117,8 @@
 }
 
 #theme-tokyo_night {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #73daca;
 	--color-black: #1b1e2e;
 	--color-white: #ffffff;
@@ -117,6 +133,8 @@
 }
 
 #theme-github {
+	scrollbar-color: var(--color-primary) var(--color-black);
+
 	--color-primary: #f78166;
 	--color-black: #0d1117;
 	--color-white: #c9d1d9;
