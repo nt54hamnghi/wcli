@@ -1,12 +1,11 @@
 use components::interface::Interface;
 use leptos::prelude::*;
-use theme::create_theme;
+use stores::theme::create_theme;
 
 // Modules
 mod components;
 mod shell;
 mod stores;
-mod theme;
 
 /// An app router which renders the homepage and handles 404's
 #[component]
