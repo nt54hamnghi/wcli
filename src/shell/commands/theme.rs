@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
-use crate::stores::theme::use_theme;
 use crate::stores::theme::Theme as ThemeChoice;
+use crate::stores::theme::use_theme;
 
 use super::Command;
 use leptos::prelude::*;

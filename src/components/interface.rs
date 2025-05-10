@@ -11,9 +11,13 @@ use super::prompt::Prompt;
 
 #[component]
 pub fn Interface() -> impl IntoView {
-    let (history, set_history) = create_history();
     let (input, set_input) = signal("".to_owned());
+    // node ref to auto scroll when input or history output overflows
     let div_ref: NodeRef<html::Div> = NodeRef::new();
+    // history of input entries
+    let (history, set_history) = create_history();
+    // current index of history
+    let (current, set_current) = signal(0);
 
     let focus = move |_: MouseEvent| {
         get_input_element().focus().expect("should be focusable");
@@ -29,14 +33,16 @@ pub fn Interface() -> impl IntoView {
     };
 
     Effect::new(move || {
-        if !history.read().is_empty() {
-            scroll_bottom();
+        {
+            // force re-run on input change
+            input.read();
         }
+        scroll_bottom();
     });
 
     view! {
         <div
-            class="flex overflow-auto flex-col gap-6 p-4 pb-12 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus focus-within:border-primary"
+            class="flex overflow-auto flex-col gap-6 p-4 pb-12 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
             node_ref=div_ref
             on:mouseup=focus
             on:mouseenter=focus
@@ -57,10 +63,31 @@ pub fn Interface() -> impl IntoView {
                         match e.key().as_str() {
                             "Enter" => {
                                 set_history.write().push(Entry::new(input.get()));
+                                set_current.set(history.read().len());
                                 set_input.write().clear();
                             }
-                            "ArrowLeft" => {}
-                            "ArrowRight" => {}
+                            "ArrowUp" => {
+                                e.prevent_default();
+                                set_current.update(|c| { *c = c.saturating_sub(1) });
+                                let value = history
+                                    .read()
+                                    .get(current.get())
+                                    .map(|e| e.input.clone())
+                                    .unwrap_or_default();
+                                set_input.set(value);
+                            }
+                            "ArrowDown" => {
+                                e.prevent_default();
+                                let value = history
+                                    .with(|h| {
+                                        set_current
+                                            .update(|c| { *c = c.saturating_add(1).min(h.len()) });
+                                        h.get(current.get())
+                                            .map(|e| e.input.clone())
+                                            .unwrap_or_default()
+                                    });
+                                set_input.set(value);
+                            }
                             _ => {}
                         };
                     }

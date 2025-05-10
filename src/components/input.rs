@@ -35,12 +35,12 @@ pub(super) fn Input(
 
     let scroll_right = move || {
         let div = scroll_ref.get().expect("should be mounted");
-        div.scroll_to_with_x_and_y(div.scroll_width() as f64, 0.0);
+        div.scroll_by_with_x_and_y(div.scroll_width() as f64, 0.0);
     };
 
     let scroll_left = move || {
         let div = scroll_ref.get().expect("should be mounted");
-        div.scroll_to_with_x_and_y(0.0, 0.0);
+        div.scroll_by_with_x_and_y(-div.scroll_width() as f64, 0.0);
     };
 
     // scroll to the right when the input is updated and overflows
@@ -55,7 +55,7 @@ pub(super) fn Input(
     };
 
     view! {
-        <div class="flex items-center pr-12">
+        <div class="flex items-center">
             <div
                 class="relative text-base whitespace-pre"
                 on:click=move |_| {
@@ -83,18 +83,22 @@ pub(super) fn Input(
                 on:focus=move |_| set_is_blinking.set(true)
                 on:blur=move |_| set_is_blinking.set(false)
                 on:input:target=move |e| {
-                    {
+                    let diff = {
                         let new = e.target().value();
-                        let diff = (new.len() as isize) - (value.read().len() as isize);
-                        set_position.update(|p| *p = p.saturating_add_signed(diff));
-                    }
+                        (new.len() as isize) - (value.read().len() as isize)
+                    };
                     on_input(e);
+                    set_position.update(|p| *p = p.saturating_add_signed(diff));
                     scroll_on_input();
                 }
+                // on_keydown might change the input value,
+                // so any position updates should be done after on_keydown
                 on:keydown:target=move |e| {
+                    let key = e.key();
+                    on_keydown(e);
                     {
                         let len = value.read().len();
-                        match e.key().as_str() {
+                        match key.as_str() {
                             "Enter" => set_position.set(0),
                             "ArrowLeft" => set_position.update(|p| { *p = p.saturating_sub(1) }),
                             "ArrowRight" => {
@@ -104,14 +108,13 @@ pub(super) fn Input(
                                 set_position.set(0);
                                 scroll_left();
                             }
-                            "End" => {
+                            "End" | "ArrowUp" | "ArrowDown" => {
                                 set_position.set(len);
                                 scroll_right();
                             }
                             _ => {}
                         }
                     }
-                    on_keydown(e);
                 }
             />
         </div>
