@@ -55,7 +55,7 @@ pub(super) fn Input(
     };
 
     view! {
-        <div class="flex items-center">
+        <div class="flex relative items-center">
             <div
                 class="relative text-base whitespace-pre"
                 on:click=move |_| {
@@ -76,7 +76,7 @@ pub(super) fn Input(
             <input
                 type="text"
                 id=INPUT_ID
-                class="scale-0"
+                class="sr-only"
                 autofocus
                 node_ref=input_ref
                 prop:value=value
