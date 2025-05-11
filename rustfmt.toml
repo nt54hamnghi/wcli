@@ -1,0 +1,7 @@
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"
+reorder_imports = true
+reorder_modules = true
+match_block_trailing_comma = true
+single_line_if_else_max_width = 80
+# use_small_heuristics = "Max"

@@ -1,9 +1,11 @@
 use std::str::FromStr;
 
-use super::Palette;
-use super::{Command, echo::Echo, theme::Theme};
 use leptos::prelude::*;
 use strum::IntoEnumIterator;
+
+use super::echo::Echo;
+use super::theme::Theme;
+use super::{Command, Palette};
 
 impl Palette {
     /// Returns a one-line description
@@ -62,7 +64,7 @@ impl Command for Help {
                         }
                         .into_any(),
                     );
-                }
+                },
             }
         };
 

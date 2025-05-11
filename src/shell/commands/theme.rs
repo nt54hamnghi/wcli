@@ -1,11 +1,10 @@
 use std::str::FromStr;
 
-use crate::stores::theme::Theme as ThemeChoice;
-use crate::stores::theme::use_theme;
-
-use super::Command;
 use leptos::prelude::*;
 use strum::IntoEnumIterator;
+
+use super::Command;
+use crate::stores::theme::{Theme as ThemeChoice, use_theme};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Theme;
@@ -43,7 +42,7 @@ impl Command for Theme {
                         }
                         .into_any(),
                     );
-                }
+                },
             }
         };
 

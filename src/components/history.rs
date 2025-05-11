@@ -1,9 +1,8 @@
 use leptos::prelude::*;
 
+use super::prompt::Prompt;
 use crate::shell::dispatch;
 use crate::stores::history::use_history;
-
-use super::prompt::Prompt;
 
 #[component]
 pub fn History() -> impl IntoView {
