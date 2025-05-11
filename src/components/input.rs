@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use leptos::ev::Targeted;
 use leptos::html;
 use leptos::prelude::*;
@@ -35,29 +37,45 @@ pub(super) fn Input(
 
     let scroll_right = move || {
         let div = scroll_ref.get().expect("should be mounted");
-        div.scroll_by_with_x_and_y(div.scroll_width() as f64, 0.0);
+        let scroll_diff = div.scroll_width() - div.client_width();
+        // only scroll if the content is overflowing
+        // and if the scroll position is not already at the right edge
+        if scroll_diff > 0 && scroll_diff != div.scroll_left() {
+            // to delay scrolling to after the browser's default auto-scroll to bring input into view
+            set_timeout(
+                move || div.set_scroll_left(scroll_diff),
+                Duration::from_millis(10),
+            );
+        }
     };
 
     let scroll_left = move || {
         let div = scroll_ref.get().expect("should be mounted");
-        div.scroll_by_with_x_and_y(-div.scroll_width() as f64, 0.0);
+        // only scroll if not already at the left edge
+        if div.scroll_left() > 0 {
+            set_timeout(move || div.set_scroll_left(0), Duration::from_millis(10));
+        }
     };
 
-    // scroll to the right when the input is updated and overflows
     let scroll_on_input = move || {
         let div = scroll_ref.get().expect("should be mounted");
         let span = span_ref_before.get().expect("should be mounted");
-
-        // TODO: replace 200 with offset from prompt
-        if span.offset_width() + 200 >= div.client_width() {
-            div.scroll_to_with_x_and_y(div.scroll_width() as f64, 0.0);
-        }
+        // TODO: only scroll if the content is overflowings
+        set_timeout(
+            move || {
+                // TODO: calculate the prompt offset_width dynamically
+                // 225 is the offset_width of the prompt, which is hardcoded
+                let scroll_diff = span.offset_width() - div.client_width() + 225;
+                div.set_scroll_left(scroll_diff)
+            },
+            Duration::from_millis(5),
+        );
     };
 
     view! {
         <div class="flex relative items-center">
             <div
-                class="relative text-base whitespace-pre"
+                class="relative pr-12 text-base whitespace-pre"
                 on:click=move |_| {
                     input_ref.get().expect("should be mounted").focus().unwrap();
                 }
@@ -88,8 +106,8 @@ pub(super) fn Input(
                         (new.len() as isize) - (value.read().len() as isize)
                     };
                     on_input(e);
-                    set_position.update(|p| *p = p.saturating_add_signed(diff));
                     scroll_on_input();
+                    set_position.update(|p| *p = p.saturating_add_signed(diff));
                 }
                 // on_keydown might change the input value,
                 // so any position updates should be done after on_keydown
@@ -99,7 +117,10 @@ pub(super) fn Input(
                     {
                         let len = value.read().len();
                         match key.as_str() {
-                            "Enter" => set_position.set(0),
+                            "Enter" => {
+                                set_position.set(0);
+                                scroll_left();
+                            }
                             "ArrowLeft" => set_position.update(|p| { *p = p.saturating_sub(1) }),
                             "ArrowRight" => {
                                 set_position.update(|p| { *p = p.saturating_add(1).min(len) })
