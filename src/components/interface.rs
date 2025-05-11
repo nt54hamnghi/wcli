@@ -2,7 +2,6 @@ use std::time::Duration;
 
 use leptos::html;
 use leptos::prelude::*;
-use web_sys::MouseEvent;
 
 use super::banner::Banner;
 use super::history::History;
@@ -20,11 +19,11 @@ pub fn Interface() -> impl IntoView {
     // current index of history
     let (current, set_current) = signal(0);
 
-    let focus = move |_: MouseEvent| {
+    let focus = move || {
         get_input_element().focus().expect("should be focusable");
     };
 
-    let blur = move |_: MouseEvent| {
+    let blur = move || {
         get_input_element().blur().expect("should be focusable");
     };
 
@@ -55,9 +54,12 @@ pub fn Interface() -> impl IntoView {
         <div
             class="flex overflow-auto flex-col gap-6 p-4 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
             node_ref=div_ref
-            on:mouseup=focus
-            on:mouseenter=focus
-            on:mouseleave=blur
+            // to make the div focusable and can receive keyboard events
+            // without placing it in the tab order
+            tabindex="-1"
+            on:keydown=move |_| focus()
+            on:mouseenter=move |_| focus()
+            on:mouseleave=move |_| blur()
         >
             <Banner />
             <History />
