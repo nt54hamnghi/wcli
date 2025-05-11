@@ -1,13 +1,14 @@
+use std::time::Duration;
+
 use leptos::html;
 use leptos::prelude::*;
 use web_sys::MouseEvent;
-
-use crate::stores::history::{Entry, create_history};
 
 use super::banner::Banner;
 use super::history::History;
 use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
+use crate::stores::history::{Entry, create_history};
 
 #[component]
 pub fn Interface() -> impl IntoView {
@@ -29,12 +30,22 @@ pub fn Interface() -> impl IntoView {
 
     let scroll_bottom = move || {
         let div = div_ref.get().expect("should be mounted");
-        div.scroll_to_with_x_and_y(0.0, div.scroll_height() as f64);
+        let scroll_diff = div.scroll_height() - div.client_height();
+        // only scroll if the content is overflowing
+        // and if the scroll position is not already at the bottom
+        if scroll_diff > 0 && scroll_diff != div.scroll_top() {
+            // to delay scrolling to after the browser's default auto-scroll to bring input into view
+            set_timeout(
+                move || div.set_scroll_top(scroll_diff),
+                Duration::from_millis(25),
+            );
+        }
     };
 
     Effect::new(move || {
+        // access the input signal to force re-run on input change
+        // scope it to drop the read guard from `.read()` as soon as possible
         {
-            // force re-run on input change
             input.read();
         }
         scroll_bottom();
@@ -42,7 +53,7 @@ pub fn Interface() -> impl IntoView {
 
     view! {
         <div
-            class="flex overflow-auto flex-col gap-6 p-4 pb-12 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
+            class="flex overflow-auto flex-col gap-6 p-4 h-screen text-base transition-colors duration-100 ease-in border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
             node_ref=div_ref
             on:mouseup=focus
             on:mouseenter=focus
@@ -50,13 +61,12 @@ pub fn Interface() -> impl IntoView {
         >
             <Banner />
             <History />
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-4 items-center pb-8">
                 <Prompt />
                 <Input
                     value=input
                     scroll_ref=div_ref
                     on_input=move |e| {
-                        scroll_bottom();
                         set_input.set(e.target().value());
                     }
                     on_keydown=move |e| {
