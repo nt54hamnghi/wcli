@@ -57,7 +57,7 @@ pub(super) fn Input(
         }
     };
 
-    let scroll_on_input = move || {
+    let scroll_into_view = move || {
         let div = scroll_ref.get().expect("should be mounted");
         let span = span_ref_before.get().expect("should be mounted");
         // TODO: only scroll if the content is overflowings
@@ -106,7 +106,7 @@ pub(super) fn Input(
                         (new.len() as isize) - (value.read().len() as isize)
                     };
                     on_input(e);
-                    scroll_on_input();
+                    scroll_into_view();
                     set_position.update(|p| *p = p.saturating_add_signed(diff));
                 }
                 // on_keydown might change the input value,
@@ -129,9 +129,13 @@ pub(super) fn Input(
                                 set_position.set(0);
                                 scroll_left();
                             }
-                            "End" | "ArrowUp" | "ArrowDown" => {
+                            "End" => {
                                 set_position.set(len);
                                 scroll_right();
+                            }
+                            "ArrowUp" | "ArrowDown" => {
+                                set_position.set(len);
+                                scroll_into_view();
                             }
                             _ => {}
                         }
