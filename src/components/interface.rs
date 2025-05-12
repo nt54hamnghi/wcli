@@ -5,9 +5,9 @@ use leptos::prelude::*;
 
 use super::banner::Banner;
 use super::history::History;
-use super::input::{Input, get_input_element};
+use super::input::{get_input_element, Input};
 use super::prompt::Prompt;
-use crate::stores::history::{Entry, create_history};
+use crate::stores::history::{create_history, Entry};
 
 #[component]
 pub fn Interface() -> impl IntoView {
@@ -80,24 +80,14 @@ pub fn Interface() -> impl IntoView {
                             }
                             "ArrowUp" => {
                                 e.prevent_default();
-                                set_current.update(|c| { *c = c.saturating_sub(1) });
-                                let value = history
-                                    .read()
-                                    .get(current.get())
-                                    .map(|e| e.input.clone())
-                                    .unwrap_or_default();
+                                let (idx, value) = prev(current, history);
+                                set_current.set(idx);
                                 set_input.set(value);
                             }
                             "ArrowDown" => {
                                 e.prevent_default();
-                                let value = history
-                                    .with(|h| {
-                                        set_current
-                                            .update(|c| { *c = c.saturating_add(1).min(h.len()) });
-                                        h.get(current.get())
-                                            .map(|e| e.input.clone())
-                                            .unwrap_or_default()
-                                    });
+                                let (idx, value) = next(current, history);
+                                set_current.set(idx);
                                 set_input.set(value);
                             }
                             _ => {}
@@ -107,4 +97,48 @@ pub fn Interface() -> impl IntoView {
             </div>
         </div>
     }
+}
+
+fn prev(current: ReadSignal<usize>, history: ReadSignal<Vec<Entry>>) -> (usize, String) {
+    let history = history.read();
+    let current = current.get();
+    let value = history
+        .get(current)
+        .map(|e| e.input.as_str())
+        .unwrap_or_default();
+
+    for idx in (0..current).rev() {
+        let prev = history
+            .get(idx)
+            .map(|e| e.input.as_str())
+            .unwrap_or_default();
+
+        if prev != value {
+            return (idx, prev.to_owned());
+        }
+    }
+
+    (0, value.to_owned())
+}
+
+fn next(current: ReadSignal<usize>, history: ReadSignal<Vec<Entry>>) -> (usize, String) {
+    let history = history.read();
+    let current = current.get();
+    let value = history
+        .get(current)
+        .map(|e| e.input.as_str())
+        .unwrap_or_default();
+
+    for idx in current + 1..=history.len() {
+        let next = history
+            .get(idx)
+            .map(|e| e.input.as_str())
+            .unwrap_or_default();
+
+        if next != value {
+            return (idx, next.to_owned());
+        }
+    }
+
+    (history.len(), value.to_owned())
 }
