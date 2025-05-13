@@ -9,11 +9,13 @@ use leptos::prelude::*;
 mod commands;
 
 pub fn dispatch(input: String) -> impl IntoView {
+    let input = input.trim();
+
     if input.is_empty() {
         return "".into_any();
     }
 
-    let (cmd, args) = match input.trim_start().split_once(' ') {
+    let (cmd, args) = match input.split_once(' ') {
         Some((cmd, args)) => (
             cmd.to_owned(),
             args.split(' ').map(|s| s.to_owned()).collect::<Vec<_>>(),
