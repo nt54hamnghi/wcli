@@ -5,9 +5,9 @@ use leptos::prelude::*;
 
 use super::banner::Banner;
 use super::history::History;
-use super::input::{get_input_element, Input};
+use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
-use crate::stores::history::{create_history, Entry};
+use crate::stores::history::{Entry, create_history};
 
 #[component]
 pub fn Interface() -> impl IntoView {
@@ -18,6 +18,14 @@ pub fn Interface() -> impl IntoView {
     let (history, set_history) = create_history();
     // current index of history
     let (current, set_current) = signal(0);
+    // typeahead value used for auto-completion
+    let typeahead = Signal::derive(move || {
+        let input = input.read();
+        let history = history.read();
+        let candidates = history.iter().map(|e| e.input.as_str()).collect();
+
+        get_typeahead(candidates, input.as_str(), 3)
+    });
 
     let focus = move || {
         get_input_element().focus().expect("should be focusable");
@@ -67,6 +75,7 @@ pub fn Interface() -> impl IntoView {
                 <Prompt />
                 <Input
                     value=input
+                    typeahead=typeahead
                     scroll_ref=div_ref
                     on_input=move |e| {
                         set_input.set(e.target().value());
@@ -90,6 +99,11 @@ pub fn Interface() -> impl IntoView {
                                 set_current.set(idx);
                                 set_input.set(value);
                             }
+                            "Tab" => {
+                                e.prevent_default();
+                                let typeahead = typeahead.get();
+                                set_input.write().push_str(&typeahead);
+                            }
                             _ => {}
                         };
                     }
@@ -97,6 +111,47 @@ pub fn Interface() -> impl IntoView {
             </div>
         </div>
     }
+}
+
+fn get_typeahead(mut candidates: Vec<&str>, input: &str, limit: usize) -> String {
+    if input.len() < limit || candidates.is_empty() {
+        return "".to_owned();
+    }
+
+    candidates.retain(|s| s.starts_with(input));
+
+    let completion = match candidates.len() {
+        0 => return "".to_owned(),
+        1 => candidates[0],
+        // find the longest common prefix among all candidates
+        // this is to provide incremental completion
+        _ => candidates
+            .into_iter()
+            .reduce(|first, second| {
+                if first == second {
+                    first
+                } else if first.starts_with(second) {
+                    second
+                } else if second.starts_with(first) {
+                    first
+                } else {
+                    let diff_idx = first
+                        .chars()
+                        .zip(second.chars())
+                        .position(|(f, s)| f != s)
+                        .expect("first and second should be different");
+
+                    if first.len() < second.len() {
+                        &first[..diff_idx]
+                    } else {
+                        &second[..diff_idx]
+                    }
+                }
+            })
+            .expect("not empty"),
+    };
+
+    completion[input.len()..].to_owned()
 }
 
 fn prev(current: ReadSignal<usize>, history: ReadSignal<Vec<Entry>>) -> (usize, String) {

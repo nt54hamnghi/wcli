@@ -20,6 +20,9 @@ pub fn get_input_element() -> HtmlInputElement {
 pub(super) fn Input(
     /// Current input value
     value: ReadSignal<String>,
+    /// Typeahead value used for auto-completion
+    #[prop(into)]
+    typeahead: Signal<String>,
     /// Reference to a container to support auto scroll when input overflows.
     /// The container must have `overflow-x: auto`.
     scroll_ref: NodeRef<html::Div>,
@@ -89,7 +92,7 @@ pub(super) fn Input(
                         if is_blinking.get() { "animate-blink" } else { "" },
                     )
                 }>" "</span>
-                <span>{after}</span>
+                <span>{after}<span class="text-base opacity-60">{typeahead}</span></span>
             </div>
             <input
                 type="text"
@@ -133,7 +136,7 @@ pub(super) fn Input(
                                 set_position.set(len);
                                 scroll_right();
                             }
-                            "ArrowUp" | "ArrowDown" => {
+                            "ArrowUp" | "ArrowDown" | "Tab" => {
                                 set_position.set(len);
                                 scroll_into_view();
                             }
