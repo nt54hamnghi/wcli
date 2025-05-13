@@ -32,8 +32,8 @@ impl Command for Help {
     const NAME: &'static str = "help";
     const DESCRIPTION: &'static str = "show help message";
     const USAGE: &'static str = r#"
-    help - show the overview help
-    help [COMMAND] - show help for a specific command"#;
+    help            show the overview help
+    help [COMMAND]  show help for a specific command"#;
 
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let result = if args.is_empty() {

@@ -13,8 +13,9 @@ impl Command for Theme {
     const NAME: &'static str = "theme";
     const DESCRIPTION: &'static str = "change the theme";
     const USAGE: &'static str = r#"
-    theme - pick a random theme
-    theme [THEME] - use the specified theme"#;
+    theme           pick a random theme
+    theme [THEME]   use the specified theme
+    theme -l        list available themes"#;
 
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let (_theme, set_theme) = use_theme().unwrap();
@@ -24,6 +25,10 @@ impl Command for Theme {
         } else {
             let value = args.first().expect("has at least 1 item");
 
+            if value == "-l" || value == "--list" {
+                return Some(ThemeList().into_any());
+            };
+
             match ThemeChoice::from_str(value.as_str()) {
                 Ok(t) => t,
                 Err(_) => {
@@ -31,13 +36,7 @@ impl Command for Theme {
                         view! {
                             <div class="text-fail">
                                 <p>{format!("theme '{value}' is not supported")}</p>
-                                <p>
-                                    "available themes: "
-                                    {ThemeChoice::iter()
-                                        .map(|t| t.to_string())
-                                        .collect::<Vec<_>>()
-                                        .join(", ")}
-                                </p>
+                                <ThemeList />
                             </div>
                         }
                         .into_any(),
@@ -56,5 +55,15 @@ impl Command for Theme {
             }
             .into_any(),
         )
+    }
+}
+
+#[component]
+fn ThemeList() -> impl IntoView {
+    view! {
+        <p>
+            "available themes: "
+            {ThemeChoice::iter().map(|t| t.to_string()).collect::<Vec<_>>().join(", ")}
+        </p>
     }
 }
