@@ -2,17 +2,20 @@ use leptos::prelude::*;
 use strum::{Display, EnumIter, EnumString, IntoEnumIterator, VariantNames};
 
 #[derive(Debug, Clone, Copy, Default, EnumIter, EnumString, Display, VariantNames)]
-#[strum(serialize_all = "snake_case")]
+#[strum(serialize_all = "kebab-case")]
 pub enum Theme {
     #[default]
     Catppuccin,
+    Dracula,
     Everforest,
+    GithubDark,
+    GithubLight,
+    Houston,
     Kanagawa,
     Nord,
-    Dracula,
+    Precious,
+    RosePine,
     TokyoNight,
-    Github,
-    Houston,
 }
 
 impl Theme {
