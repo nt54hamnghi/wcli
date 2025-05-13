@@ -1,13 +1,23 @@
+use std::sync::LazyLock;
 use std::time::Duration;
 
 use leptos::html;
 use leptos::prelude::*;
+use strum::IntoEnumIterator;
 
 use super::banner::Banner;
 use super::history::History;
 use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
+use crate::shell::*;
 use crate::stores::history::{Entry, create_history};
+
+static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(|| {
+    let mut h = Palette::iter().map(|c| c.to_string()).collect::<Vec<_>>();
+    h.extend(Theme::suggest());
+    h.extend(Help::suggest());
+    h
+});
 
 #[component]
 pub fn Interface() -> impl IntoView {
@@ -22,7 +32,9 @@ pub fn Interface() -> impl IntoView {
     let typeahead = Signal::derive(move || {
         let input = input.read();
         let history = history.read();
-        let candidates = history.iter().map(|e| e.input.as_str()).collect();
+
+        let mut candidates = history.iter().map(|e| e.input.as_str()).collect::<Vec<_>>();
+        candidates.extend(PRE_HISTORY.iter().map(|s| s.as_str()));
 
         get_typeahead(candidates, input.as_str(), 3)
     });

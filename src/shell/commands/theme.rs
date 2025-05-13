@@ -56,6 +56,12 @@ impl Command for Theme {
             .into_any(),
         )
     }
+
+    fn suggest() -> Vec<String> {
+        let mut opts = vec!["theme -l".to_owned(), "theme --list".to_owned()];
+        opts.extend(ThemeChoice::iter().map(|t| format!("theme {}", t)));
+        opts
+    }
 }
 
 #[component]

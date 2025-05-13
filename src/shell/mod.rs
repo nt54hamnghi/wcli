@@ -1,12 +1,12 @@
 use std::str::FromStr;
 
-use commands::echo::Echo;
-use commands::help::Help;
-use commands::theme::Theme;
-use commands::{Command, Palette};
+pub use commands::echo::Echo;
+pub use commands::help::Help;
+pub use commands::theme::Theme;
+pub use commands::{Command, Palette};
 use leptos::prelude::*;
 
-mod commands;
+pub mod commands;
 
 pub fn dispatch(input: String) -> impl IntoView {
     let input = input.trim();

@@ -32,4 +32,8 @@ pub trait Command {
             </div>
         }
     }
+
+    fn suggest() -> Vec<String> {
+        vec![]
+    }
 }

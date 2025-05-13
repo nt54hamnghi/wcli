@@ -70,4 +70,8 @@ impl Command for Help {
 
         Some(result)
     }
+
+    fn suggest() -> Vec<String> {
+        Palette::iter().map(|c| format!("help {}", c)).collect()
+    }
 }
