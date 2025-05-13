@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use leptos::prelude::*;
-use strum::IntoEnumIterator;
+use strum::{IntoEnumIterator, VariantNames};
 
 use super::echo::Echo;
 use super::theme::Theme;
@@ -53,13 +53,7 @@ impl Command for Help {
                         view! {
                             <div class="text-fail">
                                 <p>{format!("command '{cmd}' is not supported")}</p>
-                                <p>
-                                    "available commands: "
-                                    {Palette::iter()
-                                        .map(|t| t.to_string())
-                                        .collect::<Vec<_>>()
-                                        .join(", ")}
-                                </p>
+                                <p>"available commands: " {Palette::VARIANTS.join(", ")}</p>
                             </div>
                         }
                         .into_any(),

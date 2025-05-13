@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use leptos::prelude::*;
-use strum::IntoEnumIterator;
+use strum::{IntoEnumIterator, VariantNames};
 
 use super::Command;
 use crate::stores::theme::{Theme as ThemeChoice, use_theme};
@@ -66,10 +66,5 @@ impl Command for Theme {
 
 #[component]
 fn ThemeList() -> impl IntoView {
-    view! {
-        <p>
-            "available themes: "
-            {ThemeChoice::iter().map(|t| t.to_string()).collect::<Vec<_>>().join(", ")}
-        </p>
-    }
+    view! { <p>"available themes: " {ThemeChoice::VARIANTS.join(", ")}</p> }
 }

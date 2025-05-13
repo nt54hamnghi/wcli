@@ -1,7 +1,7 @@
 use leptos::prelude::*;
-use strum::{Display, EnumIter, EnumString, IntoEnumIterator};
+use strum::{Display, EnumIter, EnumString, IntoEnumIterator, VariantNames};
 
-#[derive(Debug, Clone, Copy, Default, EnumIter, EnumString, Display)]
+#[derive(Debug, Clone, Copy, Default, EnumIter, EnumString, Display, VariantNames)]
 #[strum(serialize_all = "snake_case")]
 pub enum Theme {
     #[default]

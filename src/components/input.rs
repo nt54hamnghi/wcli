@@ -6,6 +6,8 @@ use leptos::prelude::*;
 use leptos::wasm_bindgen::JsCast;
 use web_sys::{Event, HtmlInputElement, KeyboardEvent};
 
+use crate::shell::Palette;
+
 const INPUT_ID: &str = "sole-input";
 
 pub fn get_input_element() -> HtmlInputElement {
@@ -83,7 +85,21 @@ pub(super) fn Input(
                     input_ref.get().expect("should be mounted").focus().unwrap();
                 }
             >
-                <span node_ref=span_ref_before>{before}</span>
+                <span node_ref=span_ref_before>
+                    {
+                        let before = split_first(before);
+                        view! {
+                            <span class=move || {
+                                if Palette::contains(before.read().0.as_str()) {
+                                    "text-pass"
+                                } else {
+                                    "text-fail"
+                                }
+                            }>{move || before.read().0.clone()}</span>
+                            <span>{move || before.read().1.clone()}</span>
+                        }
+                    }
+                </span>
                 // top-1/2 moves the top-left corner down to the middle of the parent's height
                 // -translate-y-1/2 moves the element up by haft of its height
                 <span class=move || {
@@ -149,9 +165,22 @@ pub(super) fn Input(
     }
 }
 
+/// Returns a derived signal that splits a string at a specified position
+/// and return the parts before and after that position as derived signals.
 fn split_at(s: ReadSignal<String>, mid: ReadSignal<usize>) -> (Signal<String>, Signal<String>) {
     let before = Signal::derive(move || s.get().split_at(mid.get()).0.to_owned());
     let after = Signal::derive(move || s.get().split_at(mid.get()).1.to_owned());
 
     (before, after)
+}
+
+/// Returns a derived signal that splits a string at the first space character, preserving the space in the second part.
+/// If no space is found, the signal returns a tuple of the input string and an empty string.
+fn split_first(s: Signal<String>) -> Signal<(String, String)> {
+    Signal::derive(move || {
+        s.read()
+            .split_once(' ')
+            .map(|(f, s)| (f.to_owned(), format!(" {s}")))
+            .unwrap_or_else(|| (s.get(), "".to_owned()))
+    })
 }

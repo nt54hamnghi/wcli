@@ -1,16 +1,22 @@
 use leptos::prelude::*;
-use strum::{Display, EnumIter, EnumString};
+use strum::{Display, EnumIter, EnumString, VariantNames};
 
 pub mod echo;
 pub mod help;
 pub mod theme;
 
-#[derive(Debug, Clone, Copy, EnumString, EnumIter, Display)]
+#[derive(Debug, Clone, Copy, EnumString, EnumIter, Display, VariantNames)]
 #[strum(serialize_all = "snake_case")]
 pub enum Palette {
     Echo,
     Help,
     Theme,
+}
+
+impl Palette {
+    pub fn contains(s: &str) -> bool {
+        Palette::VARIANTS.contains(&s)
+    }
 }
 
 pub trait Command {
