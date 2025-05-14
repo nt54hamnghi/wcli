@@ -4,6 +4,7 @@ use leptos::prelude::*;
 use strum::{IntoEnumIterator, VariantNames};
 
 use super::echo::Echo;
+use super::fetch::Fetch;
 use super::theme::Theme;
 use super::{Command, Palette};
 
@@ -14,6 +15,7 @@ impl Palette {
             Self::Echo => (Echo::NAME, Echo::DESCRIPTION),
             Self::Help => (Help::NAME, Help::DESCRIPTION),
             Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
+            Self::Fetch => (Fetch::NAME, Fetch::DESCRIPTION),
         };
 
         view! {
@@ -47,6 +49,7 @@ impl Command for Help {
                     Palette::Echo => Echo::help().into_any(),
                     Palette::Help => Help::help().into_any(),
                     Palette::Theme => Theme::help().into_any(),
+                    Palette::Fetch => Fetch::help().into_any(),
                 },
                 Err(_) => {
                     return Some(

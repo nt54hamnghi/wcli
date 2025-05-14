@@ -36,7 +36,7 @@ pub fn Interface() -> impl IntoView {
         let mut candidates = history.iter().map(|e| e.input.as_str()).collect::<Vec<_>>();
         candidates.extend(PRE_HISTORY.iter().map(|s| s.as_str()));
 
-        get_typeahead(candidates, input.as_str(), 3)
+        get_typeahead(candidates, input.as_str(), 2)
     });
 
     let focus = move || {

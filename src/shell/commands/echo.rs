@@ -7,7 +7,7 @@ pub struct Echo;
 
 impl Command for Echo {
     const NAME: &'static str = "echo";
-    const DESCRIPTION: &'static str = r"display a line of text";
+    const DESCRIPTION: &'static str = "display a line of text";
     const USAGE: &'static str = r#"
     echo [STRING]"#;
 

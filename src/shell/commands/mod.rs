@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use strum::{Display, EnumIter, EnumString, VariantNames};
 
 pub mod echo;
+pub mod fetch;
 pub mod help;
 pub mod theme;
 
@@ -11,6 +12,7 @@ pub enum Palette {
     Echo,
     Help,
     Theme,
+    Fetch,
 }
 
 impl Palette {
