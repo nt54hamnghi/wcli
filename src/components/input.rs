@@ -17,7 +17,7 @@ pub fn get_input_element() -> HtmlInputElement {
         .unchecked_into()
 }
 
-/// Terminal-style input component with block cursor and scroll support
+/// Terminal-style input component with a custom blinking block cursor and scroll support
 #[component]
 pub(super) fn Input(
     /// Current input value
@@ -33,8 +33,11 @@ pub(super) fn Input(
     /// The keydown event handler
     on_keydown: impl Fn(Targeted<KeyboardEvent, HtmlInputElement>) + 'static,
 ) -> impl IntoView {
+    // position of the cursor in the input
     let (position, set_position) = signal(0);
+    // whether the cursor is blinking
     let (is_blinking, set_is_blinking) = signal(false);
+    // split the input into before and after the cursor
     let (before, after) = split_at(value, position);
 
     let input_ref: NodeRef<html::Input> = NodeRef::new();
@@ -76,6 +79,13 @@ pub(super) fn Input(
             Duration::from_millis(5),
         );
     };
+
+    Effect::new(move || {
+        if value.read().is_empty() {
+            set_position.set(0);
+            scroll_left();
+        }
+    });
 
     view! {
         <div class="flex relative items-center">
@@ -131,15 +141,11 @@ pub(super) fn Input(
                 // on_keydown might change the input value,
                 // so any position updates should be done after on_keydown
                 on:keydown:target=move |e| {
-                    let key = e.key();
+                    let kbe = e.clone();
                     on_keydown(e);
                     {
                         let len = value.read().len();
-                        match key.as_str() {
-                            "Enter" => {
-                                set_position.set(0);
-                                scroll_left();
-                            }
+                        match kbe.key().as_str() {
                             "ArrowLeft" => set_position.update(|p| { *p = p.saturating_sub(1) }),
                             "ArrowRight" => {
                                 set_position.update(|p| { *p = p.saturating_add(1).min(len) })

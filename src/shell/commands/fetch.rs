@@ -50,7 +50,7 @@ fn FetchLogo() -> impl IntoView {
 fn FetchDetails() -> impl IntoView {
     view! {
         <div class="flex flex-col gap-0">
-            <p>---------------------------------------</p>
+            <p class="whitespace-nowrap">---------------------------------------</p>
             <p class="flex gap-2 items-center">
                 <Icon icon=i::FaIdCardRegular height="17" width="17" />
                 <span>"name: "</span>
@@ -91,7 +91,7 @@ fn FetchDetails() -> impl IntoView {
                     "linkedin.com/in/hamnghi"
                 </a>
             </p>
-            <p>---------------------------------------</p>
+            <p class="whitespace-nowrap">---------------------------------------</p>
         </div>
     }
 }

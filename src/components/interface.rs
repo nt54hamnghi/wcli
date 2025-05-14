@@ -124,6 +124,10 @@ pub fn Interface() -> impl IntoView {
                                 let typeahead = typeahead.get();
                                 set_input.write().push_str(&typeahead);
                             }
+                            "c" if e.ctrl_key() => {
+                                e.prevent_default();
+                                set_input.write().clear();
+                            }
                             "l" if e.ctrl_key() => {
                                 e.prevent_default();
                                 set_history.write().clear();
