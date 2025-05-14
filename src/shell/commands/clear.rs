@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 
 use super::Command;
-use crate::components::banner::{IsVisible, use_banner_toggle};
+use crate::components::banner::use_banner_toggle;
 use crate::stores::history::use_history;
 
 pub struct Clear;
@@ -17,7 +17,7 @@ impl Command for Clear {
         set_history.write().clear();
 
         let (_visible, set_visible) = use_banner_toggle().expect("not yet created");
-        set_visible.set(IsVisible(false));
+        set_visible.write().0 = false;
 
         // clear doesn't return anything
         None::<()>

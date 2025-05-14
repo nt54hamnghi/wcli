@@ -22,7 +22,7 @@ static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(|| {
 #[component]
 pub fn Interface() -> impl IntoView {
     // toggle banner visibility
-    let (visible, _set_visible) = create_banner_toggle();
+    let (visible, set_visible) = create_banner_toggle();
     // input value
     let (input, set_input) = signal("".to_owned());
     // node ref to auto scroll when input or history output overflows
@@ -123,6 +123,11 @@ pub fn Interface() -> impl IntoView {
                                 e.prevent_default();
                                 let typeahead = typeahead.get();
                                 set_input.write().push_str(&typeahead);
+                            }
+                            "l" if e.ctrl_key() => {
+                                e.prevent_default();
+                                set_history.write().clear();
+                                set_visible.write().0 = false;
                             }
                             _ => {}
                         };
