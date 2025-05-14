@@ -21,10 +21,8 @@ impl Palette {
         };
 
         view! {
-            <div class="text-base">
-                <span class="text-green-theme">{name}</span>
-                <span>" - " {desc}</span>
-            </div>
+            <span class="text-green-theme">{name}</span>
+            <span class="text-base">{desc}</span>
         }
     }
 }
@@ -42,7 +40,7 @@ impl Command for Help {
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();
-            view! { <div class="flex flex-col gap-2">{msg}</div> }.into_any()
+            view! { <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div> }.into_any()
         } else {
             let cmd = args.first().expect("has at least 1 item");
 
