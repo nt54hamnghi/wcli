@@ -3,6 +3,7 @@ use std::str::FromStr;
 use leptos::prelude::*;
 use strum::{IntoEnumIterator, VariantNames};
 
+use super::clear::Clear;
 use super::echo::Echo;
 use super::fetch::Fetch;
 use super::theme::Theme;
@@ -16,6 +17,7 @@ impl Palette {
             Self::Help => (Help::NAME, Help::DESCRIPTION),
             Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
             Self::Fetch => (Fetch::NAME, Fetch::DESCRIPTION),
+            Self::Clear => (Clear::NAME, Clear::DESCRIPTION),
         };
 
         view! {
@@ -50,6 +52,7 @@ impl Command for Help {
                     Palette::Help => Help::help().into_any(),
                     Palette::Theme => Theme::help().into_any(),
                     Palette::Fetch => Fetch::help().into_any(),
+                    Palette::Clear => Clear::help().into_any(),
                 },
                 Err(_) => {
                     return Some(

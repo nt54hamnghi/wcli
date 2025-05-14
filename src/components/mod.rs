@@ -1,5 +1,5 @@
-mod banner;
-mod history;
-mod input;
+pub mod banner;
+pub mod history;
+pub mod input;
 pub mod interface;
-mod prompt;
+pub mod prompt;

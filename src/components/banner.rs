@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use leptos::prelude::*;
 
 const ASCII_ART: &str = r#"
@@ -13,16 +15,45 @@ const ASCII_ART: &str = r#"
 "#;
 
 #[component]
-pub fn Banner() -> impl IntoView {
-    view! {
-        <div>
-            <p class="mb-2 whitespace-pre text-primary">{ASCII_ART}</p>
-            <p>"version 0.1.0"</p>
-            <p>
-                "type "<span class="text-green-theme">help</span>
-                " for a list of available commands"
-            </p>
-            <p>"type "<span class="text-green-theme">fetch</span> " to display summary"</p>
-        </div>
+pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
+    // use a closure to make accessing the visible signal reactive
+    move || {
+        visible.read().then(|| {
+            view! {
+                <div>
+                    <p class="mb-2 whitespace-pre text-primary">{ASCII_ART}</p>
+                    <p>"version 0.1.0"</p>
+                    <p>
+                        "type "<span class="text-green-theme">help</span>
+                        " for a list of available commands"
+                    </p>
+                    <p>"type "<span class="text-green-theme">fetch</span> " to display summary"</p>
+                </div>
+            }
+        })
     }
+}
+
+/// A boolean indicator of the visibility of the banner.
+/// It's a newtype wrapper around a boolean to make it
+/// unambiguous when providing and using the value as context.
+#[derive(Clone, Copy)]
+pub struct IsVisible(pub bool);
+
+impl Deref for IsVisible {
+    type Target = bool;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+pub fn create_banner_toggle() -> (ReadSignal<IsVisible>, WriteSignal<IsVisible>) {
+    let visible = RwSignal::new(IsVisible(true));
+    provide_context(visible);
+    visible.split()
+}
+
+pub fn use_banner_toggle() -> Option<(ReadSignal<IsVisible>, WriteSignal<IsVisible>)> {
+    use_context::<RwSignal<IsVisible>>().map(|v| v.split())
 }

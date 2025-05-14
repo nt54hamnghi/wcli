@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+pub use commands::clear::Clear;
 pub use commands::echo::Echo;
 pub use commands::fetch::Fetch;
 pub use commands::help::Help;
@@ -30,6 +31,7 @@ pub fn dispatch(input: String) -> impl IntoView {
             Palette::Help => Help::run(args).into_any(),
             Palette::Theme => Theme::run(args).into_any(),
             Palette::Fetch => Fetch::run(args).into_any(),
+            Palette::Clear => Clear::run(args).into_any(),
         },
         Err(_) => not_found(cmd).into_any(),
     }

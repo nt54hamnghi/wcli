@@ -5,7 +5,7 @@ use leptos::html;
 use leptos::prelude::*;
 use strum::IntoEnumIterator;
 
-use super::banner::Banner;
+use super::banner::{Banner, create_banner_toggle};
 use super::history::History;
 use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
@@ -21,6 +21,9 @@ static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(|| {
 
 #[component]
 pub fn Interface() -> impl IntoView {
+    // toggle banner visibility
+    let (visible, _set_visible) = create_banner_toggle();
+    // input value
     let (input, set_input) = signal("".to_owned());
     // node ref to auto scroll when input or history output overflows
     let div_ref: NodeRef<html::Div> = NodeRef::new();
@@ -86,7 +89,7 @@ pub fn Interface() -> impl IntoView {
             on:mouseenter=move |_| focus()
             on:mouseleave=move |_| blur()
         >
-            <Banner />
+            <Banner visible=visible />
             <History />
             <div class="flex gap-4 items-center pb-8">
                 <Prompt />
