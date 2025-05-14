@@ -8,7 +8,7 @@ use crate::stores::history::use_history;
 pub fn History() -> impl IntoView {
     let (history, _set_history) = use_history().expect("not yet created");
     view! {
-        <For each=move || history.get() key=move |entry| entry.id() let(entry)>
+        <For each=move || history.read().buffer().to_vec() key=move |entry| entry.id() let(entry)>
             {
                 view! {
                     <div>

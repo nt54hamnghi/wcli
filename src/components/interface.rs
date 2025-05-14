@@ -10,7 +10,7 @@ use super::history::History;
 use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
 use crate::shell::*;
-use crate::stores::history::{Entry, create_history};
+use crate::stores::history::{History, create_history};
 
 static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(|| {
     let mut h = Palette::iter().map(|c| c.to_string()).collect::<Vec<_>>();
@@ -33,10 +33,15 @@ pub fn Interface() -> impl IntoView {
         let input = input.read();
         let history = history.read();
 
-        let mut candidates = history.iter().map(|e| e.input.as_str()).collect::<Vec<_>>();
+        let mut candidates = history
+            .commands()
+            .iter()
+            .map(|c| c.as_str())
+            .collect::<Vec<_>>();
+
         candidates.extend(PRE_HISTORY.iter().map(|s| s.as_str()));
 
-        get_typeahead(candidates, input.as_str(), 2)
+        use_typeahead(candidates, input.as_str(), 2)
     });
 
     let focus = move || {
@@ -95,8 +100,8 @@ pub fn Interface() -> impl IntoView {
                     on_keydown=move |e| {
                         match e.key().as_str() {
                             "Enter" => {
-                                set_history.write().push(Entry::new(input.get()));
-                                set_current.set(history.read().len());
+                                set_history.write().push(input.get());
+                                set_current.set(history.read().commands().len());
                                 set_input.write().clear();
                             }
                             "ArrowUp" => {
@@ -125,7 +130,7 @@ pub fn Interface() -> impl IntoView {
     }
 }
 
-fn get_typeahead(mut candidates: Vec<&str>, input: &str, limit: usize) -> String {
+fn use_typeahead(mut candidates: Vec<&str>, input: &str, limit: usize) -> String {
     if input.len() < limit || candidates.is_empty() {
         return "".to_owned();
     }
@@ -166,46 +171,21 @@ fn get_typeahead(mut candidates: Vec<&str>, input: &str, limit: usize) -> String
     completion[input.len()..].to_owned()
 }
 
-fn prev(current: ReadSignal<usize>, history: ReadSignal<Vec<Entry>>) -> (usize, String) {
+fn prev(current: ReadSignal<usize>, history: ReadSignal<History>) -> (usize, String) {
     let history = history.read();
-    let current = current.get();
-    let value = history
-        .get(current)
-        .map(|e| e.input.as_str())
-        .unwrap_or_default();
+    let idx = current.get().saturating_sub(1);
+    let value = history.commands().get(idx).cloned().unwrap_or_default();
 
-    for idx in (0..current).rev() {
-        let prev = history
-            .get(idx)
-            .map(|e| e.input.as_str())
-            .unwrap_or_default();
-
-        if prev != value {
-            return (idx, prev.to_owned());
-        }
-    }
-
-    (0, value.to_owned())
+    (idx, value)
 }
 
-fn next(current: ReadSignal<usize>, history: ReadSignal<Vec<Entry>>) -> (usize, String) {
+fn next(current: ReadSignal<usize>, history: ReadSignal<History>) -> (usize, String) {
     let history = history.read();
-    let current = current.get();
-    let value = history
-        .get(current)
-        .map(|e| e.input.as_str())
-        .unwrap_or_default();
+    let idx = current
+        .get()
+        .saturating_add(1)
+        .min(history.commands().len());
+    let value = history.commands().get(idx).cloned().unwrap_or_default();
 
-    for idx in current + 1..=history.len() {
-        let next = history
-            .get(idx)
-            .map(|e| e.input.as_str())
-            .unwrap_or_default();
-
-        if next != value {
-            return (idx, next.to_owned());
-        }
-    }
-
-    (history.len(), value.to_owned())
+    (idx, value)
 }
