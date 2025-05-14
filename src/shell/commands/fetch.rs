@@ -1,4 +1,6 @@
+use icondata as i;
 use leptos::prelude::*;
+use leptos_icons::Icon;
 
 use super::Command;
 
@@ -41,19 +43,21 @@ impl Command for Fetch {
 
 #[component]
 fn FetchLogo() -> impl IntoView {
-    view! { <p class="whitespace-pre text-orange-theme">{ASCII_LOGO}</p> }
+    view! { <p class="text-xs whitespace-pre text-orange-theme">{ASCII_LOGO}</p> }
 }
 
 #[component]
 fn FetchDetails() -> impl IntoView {
     view! {
         <div class="flex flex-col gap-0">
-            <p>------------------------------------</p>
+            <p>---------------------------------------</p>
             <p class="flex gap-2 items-center">
+                <Icon icon=i::FaIdCardRegular height="17" width="17" />
                 <span>"name: "</span>
                 <span class="text-orange-theme">"Nghi Nguyen"</span>
             </p>
             <p class="flex gap-2 items-center">
+                <Icon icon=i::FaEnvelopeSolid height="17" width="17" />
                 <span>"email: "</span>
                 <a
                     href="mailto:hamnghi.nguyentrieu@gmail.com"
@@ -64,6 +68,7 @@ fn FetchDetails() -> impl IntoView {
                 </a>
             </p>
             <p class="flex gap-2 items-center">
+                <Icon icon=i::FaGithubBrands height="17" width="17" />
                 <span>"github: "</span>
                 <a
                     href="https://github.com/nt54hamnghi"
@@ -75,6 +80,7 @@ fn FetchDetails() -> impl IntoView {
                 </a>
             </p>
             <p class="flex gap-2 items-center">
+                <Icon icon=i::FaLinkedinBrands height="17" width="17" />
                 <span>"linkedin: "</span>
                 <a
                     href="https://linkedin.com/in/hamnghi"
@@ -85,7 +91,7 @@ fn FetchDetails() -> impl IntoView {
                     "linkedin.com/in/hamnghi"
                 </a>
             </p>
-            <p>------------------------------------</p>
+            <p>---------------------------------------</p>
         </div>
     }
 }

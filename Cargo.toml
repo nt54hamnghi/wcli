@@ -8,6 +8,8 @@ authors = ["nt54hamnghi <hamnghi250699@gmail.com>"]
 
 [dependencies]
 leptos = { version = "0.7", features = ["csr"] }
+icondata = { version = "0.5.0", features = ["font-awesome"] }
+leptos_icons = "0.5.0"
 console_log = "1"
 log = "0.4"
 console_error_panic_hook = "0.1"
