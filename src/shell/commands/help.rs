@@ -40,7 +40,28 @@ impl Command for Help {
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();
-            view! { <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div> }.into_any()
+            view! {
+                <div class="flex flex-col gap-y-4">
+                    <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div>
+                    <div class="grid gap-x-6 grid-cols-[max-content_auto]">
+                        <span class="text-info">"[arrow up]"</span>
+                        <span>"previous command"</span>
+
+                        <span class="text-info">"[arrow down]"</span>
+                        <span>"next command"</span>
+
+                        <span class="text-info">"[tab]"</span>
+                        <span>"trigger completion"</span>
+
+                        <span class="text-info">"[ctrl+c]"</span>
+                        <span>"clear input"</span>
+
+                        <span class="text-info">"[ctrl+l]"</span>
+                        <span>"clear terminal"</span>
+                    </div>
+                </div>
+            }
+            .into_any()
         } else {
             let cmd = args.first().expect("has at least 1 item");
 

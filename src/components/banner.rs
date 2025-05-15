@@ -27,6 +27,10 @@ pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
                         "type "<span class="text-green-theme">help</span>
                         " for a list of available commands"
                     </p>
+                    <p>
+                        "type "<span class="text-green-theme">help</span>
+                        " [command] for help about a specific command"
+                    </p>
                     <p>"type "<span class="text-green-theme">fetch</span> " to display summary"</p>
                 </div>
             }
