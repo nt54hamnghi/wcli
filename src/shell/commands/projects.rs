@@ -1,4 +1,4 @@
-use leptos::either::{Either, either};
+use leptos::either::Either;
 use leptos::prelude::*;
 
 use super::Command;
@@ -8,8 +8,8 @@ pub struct Projects;
 impl Command for Projects {
     const NAME: &'static str = "projects";
     const DESCRIPTION: &'static str = "explore my projects";
-    const USAGE: &'static str = r#"
-    projects"#;
+    const USAGE: &'static str = "\t\
+    projects";
 
     fn run(_: Vec<String>) -> Option<impl IntoView> {
         Some(view! {

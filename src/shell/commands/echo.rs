@@ -8,8 +8,8 @@ pub struct Echo;
 impl Command for Echo {
     const NAME: &'static str = "echo";
     const DESCRIPTION: &'static str = "display a line of text";
-    const USAGE: &'static str = r#"
-    echo [STRING]"#;
+    const USAGE: &'static str = "\t\
+    echo [string]";
 
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let result = if args.is_empty() {

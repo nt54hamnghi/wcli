@@ -12,10 +12,10 @@ pub struct Theme;
 impl Command for Theme {
     const NAME: &'static str = "theme";
     const DESCRIPTION: &'static str = "change the theme";
-    const USAGE: &'static str = r#"
-    theme           pick a random theme
-    theme [THEME]   use the specified theme
-    theme -l        list available themes"#;
+    const USAGE: &'static str = "\t\
+    theme             pick a random theme
+    theme [name]      use the specified theme
+    theme -l, --list  list available themes";
 
     fn run(args: Vec<String>) -> Option<impl IntoView> {
         let (_theme, set_theme) = use_theme().unwrap();

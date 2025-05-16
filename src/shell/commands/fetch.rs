@@ -28,8 +28,8 @@ const ASCII_LOGO: &str = r#"
 impl Command for Fetch {
     const NAME: &'static str = "fetch";
     const DESCRIPTION: &'static str = "get a summary about me";
-    const USAGE: &'static str = r#"
-    fetch"#;
+    const USAGE: &'static str = "\t\
+    fetch";
 
     fn run(_: Vec<String>) -> Option<impl IntoView> {
         Some(view! {

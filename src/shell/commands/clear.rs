@@ -9,8 +9,8 @@ pub struct Clear;
 impl Command for Clear {
     const NAME: &'static str = "clear";
     const DESCRIPTION: &'static str = "clear screen";
-    const USAGE: &'static str = r#"
-    clear"#;
+    const USAGE: &'static str = "\t\
+    clear";
 
     fn run(_: Vec<String>) -> Option<impl IntoView> {
         let (_history, set_history) = use_history().expect("not yet created");
