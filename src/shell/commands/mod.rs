@@ -5,16 +5,18 @@ pub mod clear;
 pub mod echo;
 pub mod fetch;
 pub mod help;
+pub mod projects;
 pub mod theme;
 
 #[derive(Debug, Clone, Copy, EnumString, EnumIter, Display, VariantNames)]
 #[strum(serialize_all = "snake_case")]
 pub enum Palette {
-    Echo,
-    Help,
-    Theme,
-    Fetch,
     Clear,
+    Echo,
+    Fetch,
+    Help,
+    Projects,
+    Theme,
 }
 
 impl Palette {

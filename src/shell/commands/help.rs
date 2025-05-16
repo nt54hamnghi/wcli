@@ -6,6 +6,7 @@ use strum::{IntoEnumIterator, VariantNames};
 use super::clear::Clear;
 use super::echo::Echo;
 use super::fetch::Fetch;
+use super::projects::Projects;
 use super::theme::Theme;
 use super::{Command, Palette};
 
@@ -18,6 +19,7 @@ impl Palette {
             Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
             Self::Fetch => (Fetch::NAME, Fetch::DESCRIPTION),
             Self::Clear => (Clear::NAME, Clear::DESCRIPTION),
+            Self::Projects => (Projects::NAME, Projects::DESCRIPTION),
         };
 
         view! {
@@ -69,6 +71,7 @@ impl Command for Help {
                     Palette::Theme => Theme::help().into_any(),
                     Palette::Fetch => Fetch::help().into_any(),
                     Palette::Clear => Clear::help().into_any(),
+                    Palette::Projects => Projects::help().into_any(),
                 },
                 Err(_) => {
                     return Some(
