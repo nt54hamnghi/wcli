@@ -27,7 +27,7 @@ const ASCII_LOGO: &str = r#"
 
 impl Command for Fetch {
     const NAME: &'static str = "fetch";
-    const DESCRIPTION: &'static str = "fetch info about me";
+    const DESCRIPTION: &'static str = "get a summary about me";
     const USAGE: &'static str = r#"
     fetch"#;
 

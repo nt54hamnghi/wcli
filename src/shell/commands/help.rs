@@ -21,7 +21,7 @@ impl Palette {
         };
 
         view! {
-            <span class="text-green-theme">{name}</span>
+            <span class="pl-4 text-green-theme">{name}</span>
             <span class="text-base">{desc}</span>
         }
     }
@@ -41,23 +41,20 @@ impl Command for Help {
         let result = if args.is_empty() {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();
             view! {
-                <div class="flex flex-col gap-y-4">
-                    <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div>
-                    <div class="grid gap-x-6 grid-cols-[max-content_auto]">
-                        <span class="text-info">"[arrow up]"</span>
-                        <span>"previous command"</span>
-
-                        <span class="text-info">"[arrow down]"</span>
-                        <span>"next command"</span>
-
-                        <span class="text-info">"[tab]"</span>
-                        <span>"trigger completion"</span>
-
-                        <span class="text-info">"[ctrl+c]"</span>
-                        <span>"clear input"</span>
-
-                        <span class="text-info">"[ctrl+l]"</span>
-                        <span>"clear terminal"</span>
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <p>"Commands:"</p>
+                        <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div>
+                    </div>
+                    <div>
+                        <p>"Keybindings:"</p>
+                        <div class="grid gap-x-6 grid-cols-[max-content_auto]">
+                            <Keybinding key="[arrow up]" desc="previous command" />
+                            <Keybinding key="[arrow down]" desc="next command" />
+                            <Keybinding key="[ctrl+c]" desc="clear input" />
+                            <Keybinding key="[ctrl+l]" desc="clear screen" />
+                            <Keybinding key="[tab]" desc="trigger completion" />
+                        </div>
                     </div>
                 </div>
             }
@@ -92,5 +89,13 @@ impl Command for Help {
 
     fn suggest() -> Vec<String> {
         Palette::iter().map(|c| format!("help {}", c)).collect()
+    }
+}
+
+#[component]
+fn Keybinding(#[prop(into)] key: &'static str, #[prop(into)] desc: &'static str) -> impl IntoView {
+    view! {
+        <span class="pl-4 text-info">{key}</span>
+        <span>{desc}</span>
     }
 }

@@ -8,7 +8,7 @@ pub struct Clear;
 
 impl Command for Clear {
     const NAME: &'static str = "clear";
-    const DESCRIPTION: &'static str = "clear the screen";
+    const DESCRIPTION: &'static str = "clear screen";
     const USAGE: &'static str = r#"
     clear"#;
 
