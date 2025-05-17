@@ -52,12 +52,12 @@ fn FetchDetails() -> impl IntoView {
         <div class="flex flex-col gap-0">
             <p class="whitespace-nowrap">---------------------------------------</p>
             <p class="flex gap-2 items-center">
-                <Icon icon=i::FaIdCardRegular height="17" width="17" />
+                <Icon icon=i::FaIdCardRegular height="1.125em" width="1.125em" />
                 <span>"name: "</span>
                 <span class="text-orange-theme">"Nghi Nguyen"</span>
             </p>
             <p class="flex gap-2 items-center">
-                <Icon icon=i::FaEnvelopeSolid height="17" width="17" />
+                <Icon icon=i::FaEnvelopeSolid height="1.125em" width="1.125em" />
                 <span>"email: "</span>
                 <a
                     href="mailto:hamnghi.nguyentrieu@gmail.com"
@@ -68,7 +68,7 @@ fn FetchDetails() -> impl IntoView {
                 </a>
             </p>
             <p class="flex gap-2 items-center">
-                <Icon icon=i::FaGithubBrands height="17" width="17" />
+                <Icon icon=i::FaGithubBrands height="1.125em" width="1.125em" />
                 <span>"github: "</span>
                 <a
                     href="https://github.com/nt54hamnghi"
@@ -80,7 +80,7 @@ fn FetchDetails() -> impl IntoView {
                 </a>
             </p>
             <p class="flex gap-2 items-center">
-                <Icon icon=i::FaLinkedinBrands height="17" width="17" />
+                <Icon icon=i::FaLinkedinBrands height="1.125em" width="1.125em" />
                 <span>"linkedin: "</span>
                 <a
                     href="https://linkedin.com/in/hamnghi"
