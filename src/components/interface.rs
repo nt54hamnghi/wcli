@@ -1,3 +1,4 @@
+use std::ops::Deref;
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -109,13 +110,13 @@ pub fn Interface() -> impl IntoView {
                             }
                             "ArrowUp" => {
                                 e.prevent_default();
-                                let (idx, value) = prev(current, history);
+                                let (idx, value) = prev(current.get(), history.read().deref());
                                 set_current.set(idx);
                                 set_input.set(value);
                             }
                             "ArrowDown" => {
                                 e.prevent_default();
-                                let (idx, value) = next(current, history);
+                                let (idx, value) = next(current.get(), history.read().deref());
                                 set_current.set(idx);
                                 set_input.set(value);
                             }
@@ -183,20 +184,15 @@ fn use_typeahead(mut candidates: Vec<&str>, input: &str, limit: usize) -> String
     completion[input.len()..].to_owned()
 }
 
-fn prev(current: ReadSignal<usize>, history: ReadSignal<History>) -> (usize, String) {
-    let history = history.read();
-    let idx = current.get().saturating_sub(1);
+fn prev(current: usize, history: &History) -> (usize, String) {
+    let idx = current.saturating_sub(1);
     let value = history.commands().get(idx).cloned().unwrap_or_default();
 
     (idx, value)
 }
 
-fn next(current: ReadSignal<usize>, history: ReadSignal<History>) -> (usize, String) {
-    let history = history.read();
-    let idx = current
-        .get()
-        .saturating_add(1)
-        .min(history.commands().len());
+fn next(current: usize, history: &History) -> (usize, String) {
+    let idx = current.saturating_add(1).min(history.commands().len());
     let value = history.commands().get(idx).cloned().unwrap_or_default();
 
     (idx, value)
