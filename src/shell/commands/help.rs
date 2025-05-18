@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{IntoEnumIterator, VariantNames};
 
 use super::clear::Clear;
@@ -39,7 +40,7 @@ impl Command for Help {
     help            show the overview help
     help [command]  show help for a specific command";
 
-    fn run(args: Vec<String>) -> Option<impl IntoView> {
+    fn run(args: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();
             view! {

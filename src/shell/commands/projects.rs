@@ -2,6 +2,7 @@ use gloo_net::http::Request;
 use icondata as i;
 use leptos::either::Either;
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 use leptos_icons::Icon;
 use serde::{Deserialize, Serialize};
 
@@ -17,13 +18,16 @@ impl Command for Projects {
     const USAGE: &'static str = "\t\
     projects";
 
-    fn run(_: Vec<String>) -> Option<impl IntoView> {
+    fn run(_: Vec<String>, set_pending: SignalSetter<bool>) -> Option<impl IntoView> {
         let repos = LocalResource::new(fetch_repo);
         Some(view! {
             <div class="grid gap-x-6 grid-cols-[max-content_max-content_auto]">
-                <Transition fallback=move || {
-                    view! { <p>"One moment..."</p> }
-                }>
+                <Transition
+                    fallback=move || {
+                        view! { <p>"One moment..."</p> }
+                    }
+                    set_pending=set_pending
+                >
                     <span class="contents">
                         <span class="text-info">NAME</span>
                         <span class="text-info">DESCRIPTION</span>

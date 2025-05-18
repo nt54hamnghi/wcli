@@ -1,5 +1,6 @@
 use leptos::either::Either;
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 
 use super::Command;
 
@@ -11,7 +12,7 @@ impl Command for Echo {
     const USAGE: &'static str = "\t\
     echo [string]";
 
-    fn run(args: Vec<String>) -> Option<impl IntoView> {
+    fn run(args: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
             Either::Left(view! { <br /> })
         } else {

@@ -10,11 +10,11 @@ use crate::shell::Palette;
 
 const INPUT_ID: &str = "sole-input";
 
-pub fn get_input_element() -> HtmlInputElement {
-    document()
-        .get_element_by_id(INPUT_ID)
-        .expect("<input /> with id should exist")
-        .unchecked_into()
+pub fn get_input_element() -> Option<HtmlInputElement> {
+    let e = document()
+        .get_element_by_id(INPUT_ID)?
+        .unchecked_into::<HtmlInputElement>();
+    Some(e)
 }
 
 /// Terminal-style input component with a custom blinking block cursor and scroll support

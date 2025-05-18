@@ -1,5 +1,6 @@
 use icondata as i;
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 use leptos_icons::Icon;
 
 use super::Command;
@@ -31,7 +32,7 @@ impl Command for Fetch {
     const USAGE: &'static str = "\t\
     fetch";
 
-    fn run(_: Vec<String>) -> Option<impl IntoView> {
+    fn run(_: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         Some(view! {
             <div class="flex gap-12 items-center">
                 <FetchLogo />

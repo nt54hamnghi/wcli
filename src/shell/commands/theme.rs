@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{IntoEnumIterator, VariantNames};
 
 use super::Command;
@@ -17,7 +18,7 @@ impl Command for Theme {
     theme [name]      use the specified theme
     theme -l, --list  list available themes";
 
-    fn run(args: Vec<String>) -> Option<impl IntoView> {
+    fn run(args: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         let (_theme, set_theme) = use_theme().unwrap();
 
         let selected = if args.is_empty() {

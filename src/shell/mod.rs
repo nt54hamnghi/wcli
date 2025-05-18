@@ -8,10 +8,11 @@ pub use commands::projects::Projects;
 pub use commands::theme::Theme;
 pub use commands::{Command, Palette};
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 
 pub mod commands;
 
-pub fn dispatch(input: String) -> impl IntoView {
+pub fn dispatch(input: String, set_pending: SignalSetter<bool>) -> impl IntoView {
     let input = input.trim();
 
     if input.is_empty() {
@@ -28,12 +29,12 @@ pub fn dispatch(input: String) -> impl IntoView {
 
     match Palette::from_str(&cmd) {
         Ok(cmd) => match cmd {
-            Palette::Echo => Echo::run(args).into_any(),
-            Palette::Help => Help::run(args).into_any(),
-            Palette::Theme => Theme::run(args).into_any(),
-            Palette::Fetch => Fetch::run(args).into_any(),
-            Palette::Clear => Clear::run(args).into_any(),
-            Palette::Projects => Projects::run(args).into_any(),
+            Palette::Echo => Echo::run(args, set_pending).into_any(),
+            Palette::Help => Help::run(args, set_pending).into_any(),
+            Palette::Theme => Theme::run(args, set_pending).into_any(),
+            Palette::Fetch => Fetch::run(args, set_pending).into_any(),
+            Palette::Clear => Clear::run(args, set_pending).into_any(),
+            Palette::Projects => Projects::run(args, set_pending).into_any(),
         },
         Err(_) => not_found(cmd).into_any(),
     }

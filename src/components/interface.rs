@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, Not};
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -30,6 +30,8 @@ pub fn Interface() -> impl IntoView {
     let div_ref: NodeRef<html::Div> = NodeRef::new();
     // history of input entries
     let (history, set_history) = create_history();
+    // whether history is still loading
+    let (pending, set_pending) = signal(false);
     // current index of history
     let (current, set_current) = signal(0);
     // typeahead value used for auto-completion
@@ -49,11 +51,15 @@ pub fn Interface() -> impl IntoView {
     });
 
     let focus = move || {
-        get_input_element().focus().expect("should be focusable");
+        if let Some(e) = get_input_element() {
+            e.focus().expect("should be focusable");
+        }
     };
 
     let blur = move || {
-        get_input_element().blur().expect("should be focusable");
+        if let Some(e) = get_input_element() {
+            e.blur().expect("should be focusable");
+        }
     };
 
     let scroll_bottom = move || {
@@ -70,6 +76,7 @@ pub fn Interface() -> impl IntoView {
         }
     };
 
+    // scroll to the bottom when input changes
     Effect::new(move || {
         // access the input signal to force re-run on input change
         // scope it to drop the read guard from `.read()` as soon as possible
@@ -77,6 +84,15 @@ pub fn Interface() -> impl IntoView {
             input.read();
         }
         scroll_bottom();
+    });
+
+    // focus on the input and scroll to the bottom
+    // when history is fully loaded
+    Effect::new(move || {
+        if !pending.get() {
+            focus();
+            scroll_bottom();
+        }
     });
 
     view! {
@@ -91,53 +107,68 @@ pub fn Interface() -> impl IntoView {
             on:mouseleave=move |_| blur()
         >
             <Banner visible=visible />
-            <History />
+            <History set_pending=set_pending />
             <div class="flex gap-4 items-center pb-8">
-                <Prompt />
-                <Input
-                    value=input
-                    typeahead=typeahead
-                    scroll_ref=div_ref
-                    on_input=move |e| {
-                        set_input.set(e.target().value());
-                    }
-                    on_keydown=move |e| {
-                        match e.key().as_str() {
-                            "Enter" => {
-                                set_history.write().push(input.get());
-                                set_current.set(history.read().commands().len());
-                                set_input.write().clear();
+                {move || {
+                    pending
+                        .get()
+                        .not()
+                        .then(move || {
+                            view! {
+                                <Prompt />
+                                <Input
+                                    value=input
+                                    typeahead=typeahead
+                                    scroll_ref=div_ref
+                                    on_input=move |e| {
+                                        set_input.set(e.target().value());
+                                    }
+                                    on_keydown=move |e| {
+                                        match e.key().as_str() {
+                                            "Enter" => {
+                                                set_history.write().push(input.get());
+                                                set_current.set(history.read().commands().len());
+                                                set_input.write().clear();
+                                            }
+                                            "ArrowUp" => {
+                                                e.prevent_default();
+                                                let (idx, value) = prev(
+                                                    current.get(),
+                                                    history.read().deref(),
+                                                );
+                                                set_current.set(idx);
+                                                set_input.set(value);
+                                            }
+                                            "ArrowDown" => {
+                                                e.prevent_default();
+                                                let (idx, value) = next(
+                                                    current.get(),
+                                                    history.read().deref(),
+                                                );
+                                                set_current.set(idx);
+                                                set_input.set(value);
+                                            }
+                                            "Tab" => {
+                                                e.prevent_default();
+                                                let typeahead = typeahead.get();
+                                                set_input.write().push_str(&typeahead);
+                                            }
+                                            "c" if e.ctrl_key() => {
+                                                e.prevent_default();
+                                                set_input.write().clear();
+                                            }
+                                            "l" if e.ctrl_key() => {
+                                                e.prevent_default();
+                                                set_history.write().clear();
+                                                set_visible.write().0 = false;
+                                            }
+                                            _ => {}
+                                        };
+                                    }
+                                />
                             }
-                            "ArrowUp" => {
-                                e.prevent_default();
-                                let (idx, value) = prev(current.get(), history.read().deref());
-                                set_current.set(idx);
-                                set_input.set(value);
-                            }
-                            "ArrowDown" => {
-                                e.prevent_default();
-                                let (idx, value) = next(current.get(), history.read().deref());
-                                set_current.set(idx);
-                                set_input.set(value);
-                            }
-                            "Tab" => {
-                                e.prevent_default();
-                                let typeahead = typeahead.get();
-                                set_input.write().push_str(&typeahead);
-                            }
-                            "c" if e.ctrl_key() => {
-                                e.prevent_default();
-                                set_input.write().clear();
-                            }
-                            "l" if e.ctrl_key() => {
-                                e.prevent_default();
-                                set_history.write().clear();
-                                set_visible.write().0 = false;
-                            }
-                            _ => {}
-                        };
-                    }
-                />
+                        })
+                }}
             </div>
         </div>
     }

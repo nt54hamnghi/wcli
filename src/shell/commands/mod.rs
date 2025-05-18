@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{Display, EnumIter, EnumString, VariantNames};
 
 pub mod clear;
@@ -30,7 +31,7 @@ pub trait Command {
     const DESCRIPTION: &'static str;
     const USAGE: &'static str;
 
-    fn run(args: Vec<String>) -> Option<impl IntoView>;
+    fn run(args: Vec<String>, set_pending: SignalSetter<bool>) -> Option<impl IntoView>;
 
     fn help() -> impl IntoView {
         view! {

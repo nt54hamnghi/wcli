@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos::reactive::wrappers::write::SignalSetter;
 
 use super::Command;
 use crate::components::banner::use_banner_toggle;
@@ -12,7 +13,7 @@ impl Command for Clear {
     const USAGE: &'static str = "\t\
     clear";
 
-    fn run(_: Vec<String>) -> Option<impl IntoView> {
+    fn run(_: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         let (_history, set_history) = use_history().expect("not yet created");
         set_history.write().clear();
 
