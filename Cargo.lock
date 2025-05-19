@@ -547,6 +547,7 @@ dependencies = [
  "leptos_icons",
  "log",
  "serde",
+ "serde_json",
  "strum",
  "wasm-bindgen",
  "wasm-bindgen-test",
