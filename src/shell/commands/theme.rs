@@ -4,7 +4,7 @@ use leptos::prelude::*;
 use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{IntoEnumIterator, VariantNames};
 
-use super::Command;
+use super::{Command, UnexpectedOption};
 use crate::stores::theme::{Theme as ThemeChoice, use_theme};
 
 #[derive(Debug, Clone, Copy)]
@@ -24,19 +24,26 @@ impl Command for Theme {
         let selected = if args.is_empty() {
             ThemeChoice::random()
         } else {
-            let value = args.first().expect("has at least 1 item");
+            let opt = args.first().expect("has at least 1 item");
 
-            if value == "-l" || value == "--list" {
-                return Some(ThemeList().into_any());
+            if opt.starts_with('-') {
+                match opt.as_str() {
+                    "-l" | "--list" => return Some(view! { <ThemeList /> }.into_any()),
+                    _ => {
+                        return Some(
+                            view! { <UnexpectedOption opt=opt usage=Self::USAGE /> }.into_any(),
+                        );
+                    },
+                }
             };
 
-            match ThemeChoice::from_str(value.as_str()) {
+            match ThemeChoice::from_str(opt.as_str()) {
                 Ok(t) => t,
                 Err(_) => {
                     return Some(
                         view! {
                             <div class="text-fail">
-                                <p>{format!("theme '{value}' is not supported")}</p>
+                                <p>{format!("theme '{opt}' is not supported")}</p>
                                 <ThemeList />
                             </div>
                         }

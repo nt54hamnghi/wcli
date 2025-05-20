@@ -50,3 +50,15 @@ pub trait Command {
         vec![]
     }
 }
+
+#[component]
+fn UnexpectedOption(#[prop(into)] opt: String, #[prop(into)] usage: String) -> impl IntoView {
+    let msg = format!("unexpected flag: {}", opt);
+    view! {
+        <p class="text-fail">{msg}</p>
+        <p>
+            <p class="mt-4">"Usage:"</p>
+            <pre>{usage}</pre>
+        </p>
+    }
+}

@@ -6,9 +6,15 @@ use leptos::reactive::wrappers::write::SignalSetter;
 use leptos_icons::Icon;
 use serde::{Deserialize, Serialize};
 
-use super::Command;
+use super::{Command, UnexpectedOption};
 
 const BASE_URL: &str = "https://api.github.com/users/nt54hamnghi/repos";
+
+#[derive(Debug, Clone, Copy)]
+enum Format {
+    Table,
+    Json,
+}
 
 pub struct Projects;
 
@@ -21,28 +27,29 @@ impl Command for Projects {
 
     fn run(args: Vec<String>, set_pending: SignalSetter<bool>) -> Option<impl IntoView> {
         let repos = LocalResource::new(fetch_repos);
+
+        let format = match args.first().map(|s| s.as_str()).unwrap_or("") {
+            "-j" | "--json" => Format::Json,
+            opt if opt.starts_with('-') => {
+                return Some(view! { <UnexpectedOption opt=opt usage=Self::USAGE /> }.into_any());
+            },
+            _ => Format::Table,
+        };
+
         Some(view! {
-            <Transition
-                fallback=move || {
-                    view! { <p>"One moment..."</p> }
-                }
-                set_pending=set_pending
-            >
-                {move || {
-                    let first = args.first().cloned();
-                    Suspend::new(async move {
-                        let repos = repos.await;
-                        if first.is_some_and(|opts| opts == "-j" || opts == "--json") {
-                            Either::Left(
-                                view! { <pre>{serde_json::to_string_pretty(&repos).unwrap()}</pre> },
-                            )
-                        } else {
-                            Either::Right(view! { <ProjectTable items=repos /> })
+            <Transition fallback=move || view! { <p>"One moment..."</p> } set_pending=set_pending>
+                {Suspend::new(async move {
+                    let repos = repos.await;
+                    match format {
+                        Format::Json => {
+                            let json = serde_json::to_string_pretty(&repos).unwrap();
+                            view! { <pre class="mt-2">{json}</pre> }.into_any()
                         }
-                    })
-                }}
+                        Format::Table => view! { <ProjectTable items=repos /> }.into_any(),
+                    }
+                })}
             </Transition>
-        })
+        }.into_any())
     }
 
     fn suggest() -> Vec<String> {
