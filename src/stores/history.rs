@@ -1,4 +1,4 @@
-use leptos::prelude::{ReadSignal, RwSignal, WriteSignal, provide_context, use_context};
+use leptos::prelude::{provide_context, use_context, ReadSignal, RwSignal, WriteSignal};
 
 #[derive(Debug, Clone)]
 pub struct Entry {
@@ -79,4 +79,77 @@ pub fn create_history() -> (ReadSignal<History>, WriteSignal<History>) {
 /// Returns `None` if no history store has been created.
 pub fn use_history() -> Option<(ReadSignal<History>, WriteSignal<History>)> {
     use_context::<RwSignal<History>>().map(|v| v.split())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_history_new() {
+        let history = History::new();
+        assert!(history.commands().is_empty());
+        assert!(history.buffer().is_empty());
+    }
+
+    #[test]
+    fn test_history_push_basic() {
+        let mut history = History::new();
+        history.push("echo");
+
+        assert_eq!(history.commands(), &["echo"]);
+        assert_eq!(
+            history
+                .buffer()
+                .iter()
+                .map(|e| e.input.clone())
+                .collect::<Vec<_>>(),
+            &["echo"]
+        );
+    }
+
+    #[test]
+    fn test_history_push_duplicate() {
+        let mut history = History::new();
+        history.push("echo");
+        history.push("echo");
+
+        assert_eq!(history.commands(), &["echo"]);
+        assert_eq!(
+            history
+                .buffer()
+                .iter()
+                .map(|e| e.input.clone())
+                .collect::<Vec<_>>(),
+            &["echo", "echo"]
+        );
+    }
+
+    #[test]
+    fn test_history_push_different() {
+        let mut history = History::new();
+        history.push("echo");
+        history.push("clear");
+
+        assert_eq!(history.commands(), &["echo", "clear"]);
+        assert_eq!(
+            history
+                .buffer()
+                .iter()
+                .map(|e| e.input.clone())
+                .collect::<Vec<_>>(),
+            &["echo", "clear"]
+        );
+    }
+
+    #[test]
+    fn test_history_clear() {
+        let mut history = History::new();
+        history.push("echo");
+        history.push("clear");
+
+        history.clear();
+        assert!(history.buffer().is_empty());
+        assert_eq!(history.commands(), &["echo", "clear"]); // commands should remain
+    }
 }
