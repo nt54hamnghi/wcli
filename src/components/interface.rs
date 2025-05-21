@@ -4,22 +4,15 @@ use std::time::Duration;
 
 use leptos::html;
 use leptos::prelude::*;
-use strum::IntoEnumIterator;
 
 use super::banner::{Banner, create_banner_toggle};
 use super::history::History;
 use super::input::{Input, get_input_element};
 use super::prompt::Prompt;
-use crate::shell::*;
+use crate::shell::Palette;
 use crate::stores::history::{History, create_history};
 
-static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(|| {
-    let mut h = Palette::iter().map(|c| c.to_string()).collect::<Vec<_>>();
-    h.extend(Theme::suggest());
-    h.extend(Help::suggest());
-    h.extend(Projects::suggest());
-    h
-});
+static PRE_HISTORY: LazyLock<Vec<String>> = LazyLock::new(Palette::suggest);
 
 #[component]
 pub fn Interface() -> impl IntoView {

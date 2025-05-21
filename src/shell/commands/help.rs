@@ -4,31 +4,7 @@ use leptos::prelude::*;
 use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{IntoEnumIterator, VariantNames};
 
-use super::clear::Clear;
-use super::echo::Echo;
-use super::fetch::Fetch;
-use super::projects::Projects;
-use super::theme::Theme;
 use super::{Command, Palette};
-
-impl Palette {
-    /// Returns a one-line description
-    fn one_line(self) -> impl IntoView {
-        let (name, desc) = match self {
-            Self::Echo => (Echo::NAME, Echo::DESCRIPTION),
-            Self::Help => (Help::NAME, Help::DESCRIPTION),
-            Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
-            Self::Fetch => (Fetch::NAME, Fetch::DESCRIPTION),
-            Self::Clear => (Clear::NAME, Clear::DESCRIPTION),
-            Self::Projects => (Projects::NAME, Projects::DESCRIPTION),
-        };
-
-        view! {
-            <span class="pl-8 text-green-theme">{name}</span>
-            <span class="text-base">{desc}</span>
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy)]
 pub struct Help;
@@ -66,14 +42,7 @@ impl Command for Help {
             let cmd = args.first().expect("has at least 1 item");
 
             match Palette::from_str(cmd.as_str()) {
-                Ok(cmd) => match cmd {
-                    Palette::Echo => Echo::help().into_any(),
-                    Palette::Help => Help::help().into_any(),
-                    Palette::Theme => Theme::help().into_any(),
-                    Palette::Fetch => Fetch::help().into_any(),
-                    Palette::Clear => Clear::help().into_any(),
-                    Palette::Projects => Projects::help().into_any(),
-                },
+                Ok(cmd) => cmd.help().into_any(),
                 Err(_) => {
                     return Some(
                         view! {

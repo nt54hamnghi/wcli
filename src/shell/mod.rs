@@ -1,11 +1,5 @@
 use std::str::FromStr;
 
-pub use commands::clear::Clear;
-pub use commands::echo::Echo;
-pub use commands::fetch::Fetch;
-pub use commands::help::Help;
-pub use commands::projects::Projects;
-pub use commands::theme::Theme;
 pub use commands::{Command, Palette};
 use leptos::prelude::*;
 use leptos::reactive::wrappers::write::SignalSetter;
@@ -28,14 +22,7 @@ pub fn dispatch(input: String, set_pending: SignalSetter<bool>) -> impl IntoView
     };
 
     match Palette::from_str(&cmd) {
-        Ok(cmd) => match cmd {
-            Palette::Echo => Echo::run(args, set_pending).into_any(),
-            Palette::Help => Help::run(args, set_pending).into_any(),
-            Palette::Theme => Theme::run(args, set_pending).into_any(),
-            Palette::Fetch => Fetch::run(args, set_pending).into_any(),
-            Palette::Clear => Clear::run(args, set_pending).into_any(),
-            Palette::Projects => Projects::run(args, set_pending).into_any(),
-        },
+        Ok(cmd) => cmd.run(args, set_pending).into_any(),
         Err(_) => not_found(cmd).into_any(),
     }
 }
