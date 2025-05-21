@@ -1,4 +1,4 @@
-use std::ops::{Deref, Not};
+use std::ops::Deref;
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -111,64 +111,62 @@ pub fn Interface() -> impl IntoView {
             <History set_pending=set_pending />
             <div class="flex gap-4 items-center pb-8">
                 {move || {
-                    pending
-                        .get()
-                        .not()
-                        .then(move || {
-                            view! {
-                                <Prompt />
-                                <Input
-                                    value=input
-                                    typeahead=typeahead
-                                    scroll_ref=div_ref
-                                    on_input=move |e| {
-                                        set_input.set(e.target().value());
-                                    }
-                                    on_keydown=move |e| {
-                                        match e.key().as_str() {
-                                            "Enter" => {
-                                                set_history.write().push(input.get());
-                                                set_current.set(history.read().commands().len());
-                                                set_input.write().clear();
-                                            }
-                                            "ArrowUp" => {
-                                                e.prevent_default();
-                                                let (idx, value) = prev(
-                                                    current.get(),
-                                                    history.read().deref(),
-                                                );
-                                                set_current.set(idx);
-                                                set_input.set(value);
-                                            }
-                                            "ArrowDown" => {
-                                                e.prevent_default();
-                                                let (idx, value) = next(
-                                                    current.get(),
-                                                    history.read().deref(),
-                                                );
-                                                set_current.set(idx);
-                                                set_input.set(value);
-                                            }
-                                            "Tab" => {
-                                                e.prevent_default();
-                                                let typeahead = typeahead.get();
-                                                set_input.write().push_str(&typeahead);
-                                            }
-                                            "c" if e.ctrl_key() => {
-                                                e.prevent_default();
-                                                set_input.write().clear();
-                                            }
-                                            "l" if e.ctrl_key() => {
-                                                e.prevent_default();
-                                                set_history.write().clear();
-                                                set_visible.write().0 = false;
-                                            }
-                                            _ => {}
-                                        };
-                                    }
-                                />
-                            }
-                        })
+                    let show = !pending.get();
+                    show.then(move || {
+                        view! {
+                            <Prompt />
+                            <Input
+                                value=input
+                                typeahead=typeahead
+                                scroll_ref=div_ref
+                                on_input=move |e| {
+                                    set_input.set(e.target().value());
+                                }
+                                on_keydown=move |e| {
+                                    match e.key().as_str() {
+                                        "Enter" => {
+                                            set_history.write().push(input.get());
+                                            set_current.set(history.read().commands().len());
+                                            set_input.write().clear();
+                                        }
+                                        "ArrowUp" => {
+                                            e.prevent_default();
+                                            let (idx, value) = prev(
+                                                current.get(),
+                                                history.read().deref(),
+                                            );
+                                            set_current.set(idx);
+                                            set_input.set(value);
+                                        }
+                                        "ArrowDown" => {
+                                            e.prevent_default();
+                                            let (idx, value) = next(
+                                                current.get(),
+                                                history.read().deref(),
+                                            );
+                                            set_current.set(idx);
+                                            set_input.set(value);
+                                        }
+                                        "Tab" => {
+                                            e.prevent_default();
+                                            let typeahead = typeahead.get();
+                                            set_input.write().push_str(&typeahead);
+                                        }
+                                        "c" if e.ctrl_key() => {
+                                            e.prevent_default();
+                                            set_input.write().clear();
+                                        }
+                                        "l" if e.ctrl_key() => {
+                                            e.prevent_default();
+                                            set_history.write().clear();
+                                            set_visible.write().0 = false;
+                                        }
+                                        _ => {}
+                                    };
+                                }
+                            />
+                        }
+                    })
                 }}
             </div>
         </div>
@@ -228,4 +226,103 @@ fn next(current: usize, history: &History) -> (usize, String) {
     let value = history.commands().get(idx).cloned().unwrap_or_default();
 
     (idx, value)
+}
+
+#[cfg(test)]
+mod tests {
+    use rstest::{fixture, rstest};
+
+    use super::*;
+
+    #[fixture]
+    fn history() -> History {
+        let mut history = History::new();
+        history.push("clear".to_string());
+        history.push("echo".to_string());
+        history.push("fetch".to_string());
+        history
+    }
+
+    #[rstest]
+    #[case::normal(2, 1, "echo")]
+    #[case::at_start(0, 0, "clear")]
+    fn test_prev(
+        history: History,
+        #[case] current: usize,
+        #[case] expected_idx: usize,
+        #[case] expected_value: &str,
+    ) {
+        let (idx, value) = prev(current, &history);
+        assert_eq!(idx, expected_idx);
+        assert_eq!(value, expected_value);
+    }
+
+    #[rstest]
+    #[case::normal(0, 1, "echo")]
+    #[case::at_end(2, 3, "")]
+    fn test_next(
+        history: History,
+        #[case] current: usize,
+        #[case] expected_idx: usize,
+        #[case] expected_value: &str,
+    ) {
+        let (idx, value) = next(current, &history);
+        assert_eq!(idx, expected_idx);
+        assert_eq!(value, expected_value);
+    }
+
+    #[test]
+    fn test_empty_history() {
+        let history = History::new();
+
+        // Test prev with empty history
+        let (idx, value) = prev(0, &history);
+        assert_eq!(idx, 0);
+        assert_eq!(value, "");
+
+        // Test next with empty history
+        let (idx, value) = next(0, &history);
+        assert_eq!(idx, 0);
+        assert_eq!(value, "");
+    }
+
+    #[fixture]
+    fn candidates() -> Vec<&'static str> {
+        vec!["clear", "echo", "fetch", "fetching", "fetched"]
+    }
+
+    #[test]
+    fn test_use_typeahead_empty_candidates() {
+        assert_eq!(use_typeahead(vec![], "test", 2), "");
+    }
+
+    #[rstest]
+    #[case::below("e", 2, "")]
+    #[case::at("ec", 2, "ho")]
+    #[case::above("ech", 2, "o")]
+    fn test_use_typeahead_with_limit(
+        candidates: Vec<&str>,
+        #[case] input: &str,
+        #[case] limit: usize,
+        #[case] expected: &str,
+    ) {
+        let result = use_typeahead(candidates, input, limit);
+        assert_eq!(result, expected);
+    }
+
+    #[rstest]
+    #[case::no_matches("xyz", "")]
+    // exact single match, nothing to complete.
+    #[case::exact_match("clear", "")]
+    // options are "fetch", "fetching", "fetched", so the longest common prefix is "fetch"
+    // thus, after typing "fe", the completion should be "tch"
+    #[case::common_prefix("fe", "tch")]
+    fn test_use_typeahead_matches(
+        candidates: Vec<&str>,
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let result = use_typeahead(candidates, input, 2);
+        assert_eq!(result, expected);
+    }
 }

@@ -1,5 +1,4 @@
 use leptos::prelude::{ReadSignal, RwSignal, WriteSignal, provide_context, use_context};
-use web_sys::js_sys;
 
 #[derive(Debug, Clone)]
 pub struct Entry {
@@ -9,7 +8,16 @@ pub struct Entry {
 
 impl Entry {
     pub fn new(input: String) -> Self {
-        let timestamp = (js_sys::Date::now() / 1000.0).round() as u64;
+        // use SystemTime for testing as js_sys::Date is only available in wasm target
+        #[cfg(test)]
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+
+        #[cfg(not(test))]
+        let timestamp = (web_sys::js_sys::Date::now() / 1000.0).round() as u64;
+
         Self { timestamp, input }
     }
 
