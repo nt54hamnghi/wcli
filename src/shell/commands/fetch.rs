@@ -50,8 +50,7 @@ fn FetchLogo() -> impl IntoView {
 #[component]
 fn FetchDetails() -> impl IntoView {
     view! {
-        <div class="flex flex-col gap-0">
-            <p class="whitespace-nowrap">---------------------------------------</p>
+        <div class="flex flex-col gap-0 py-4 border-y">
             <p class="flex gap-2 items-center">
                 <Icon icon=i::FaIdCardRegular height="1.125em" width="1.125em" />
                 <span>"name: "</span>
@@ -92,7 +91,6 @@ fn FetchDetails() -> impl IntoView {
                     "linkedin.com/in/hamnghi"
                 </a>
             </p>
-            <p class="whitespace-nowrap">---------------------------------------</p>
         </div>
     }
 }

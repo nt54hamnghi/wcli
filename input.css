@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
+/* https://gwfh.mranftl.com/fonts/cascadia-code?subsets=latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: 400;
+  src: url('public/fonts/CascadiaCode.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
 @theme inline {
 	--animate-blink: blink 1s linear infinite;
 	@keyframes blink {
@@ -11,6 +20,8 @@
 			opacity: 0;
 		}
 	}
+
+	--font-terminal: "Cascadia Code", var(--font-mono);
 
 	--color-base: var(--color-white);
 	--color-muted: #bac2de;
