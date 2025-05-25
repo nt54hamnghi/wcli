@@ -112,12 +112,17 @@ pub(super) fn Input(
                 </span>
                 // top-1/2 moves the top-left corner down to the middle of the parent's height
                 // -translate-y-1/2 moves the element up by haft of its height
-                <span class=move || {
-                    format!(
-                        "inline-block absolute top-1/2 bg-base -translate-y-1/2 h-[1.125em] {}",
-                        if is_blinking.get() { "animate-blink" } else { "" },
-                    )
-                }>" "</span>
+                <span
+                    class=move || {
+                        format!(
+                            "inline-block absolute top-1/2 bg-base -translate-y-1/2 h-[1.125em] {}",
+                            if is_blinking.get() { "animate-blink" } else { "" },
+                        )
+                    }
+                    data-testid="cursor"
+                >
+                    " "
+                </span>
                 <span>{after}<span class="text-base opacity-60">{typeahead}</span></span>
             </div>
             <input

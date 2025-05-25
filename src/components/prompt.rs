@@ -8,15 +8,16 @@ pub fn Prompt(
     #[prop(optional)] value: String,
 ) -> impl IntoView {
     view! {
-        <div class="flex gap-4 items-center text-base">
-            <div class="inline-block whitespace-nowrap">
-                <span>{user}</span>
-                <span class="text-red-theme">@</span>
-                <span>{host}</span>
-                <span class="text-green-theme">{prefix}</span>
-            </div>
+        <div class="flex gap-4 items-center text-base" role="group" aria-label="command prompt">
+            <code class="inline-block whitespace-nowrap">
+                {user}<span class="text-red-theme">@</span>{host}
+                // hide the prefix from screen readers as it's just a decorative element
+                <span class="text-green-theme" aria-hidden="true">
+                    {prefix}
+                </span>
+            </code>
             {(!value.is_empty())
-                .then(|| view! { <span class="flex-1 whitespace-pre">{value}</span> })}
+                .then(|| view! { <code class="flex-1 whitespace-pre">{value}</code> })}
         </div>
     }
 }
