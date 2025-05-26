@@ -1,26 +1,6 @@
-import { expect, Locator, test as base } from '@playwright/test';
+import { expect } from '@playwright/test';
 
-type TestFixtures = {
-	inputElements: {
-		input: Locator;
-		beforeSpan: Locator;
-		afterSpan: Locator;
-		cursor: Locator;
-	};
-};
-
-const test = base.extend<TestFixtures>({
-	inputElements: async ({ page }, use) => {
-		await page.goto('/');
-
-		const input = page.getByRole('textbox');
-		const beforeSpan = page.getByTestId('before-cursor');
-		const afterSpan = page.getByTestId('after-cursor');
-		const cursor = page.getByTestId('cursor');
-
-		await use({ input, beforeSpan, afterSpan, cursor });
-	},
-});
+import { test } from './fixtures/input';
 
 test('clicking on cursor focuses the input', async ({
 	page,
@@ -181,6 +161,7 @@ test.describe('when input overflows', () => {
 });
 
 [
+	// TODO: if more commands are added, please update this list
 	// valid commands
 	{ current: 'cl', suggestion: 'ear' }, // clear
 	{ current: 'ec', suggestion: 'ho' }, // echo
@@ -229,6 +210,7 @@ test.describe('when input overflows', () => {
 		// Tab to select the suggestion
 		await page.keyboard.press('Tab');
 		// Check that the suggestion is selected
+		await expect(input).toHaveValue(current + suggestion);
 		await expect(beforeSpan).toHaveText(current + suggestion);
 	});
 });
