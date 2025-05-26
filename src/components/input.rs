@@ -27,7 +27,7 @@ pub(super) fn Input(
     typeahead: Signal<String>,
     /// Reference to a container to support auto scroll when input overflows.
     /// The container must have `overflow-x: auto`.
-    scroll_ref: NodeRef<html::Div>,
+    scroll_ref: NodeRef<html::Main>,
     /// The input event handler
     on_input: impl Fn(Targeted<Event, HtmlInputElement>) + 'static,
     /// The keydown event handler
@@ -95,7 +95,7 @@ pub(super) fn Input(
                     input_ref.get().expect("should be mounted").focus().unwrap();
                 }
             >
-                <span node_ref=span_ref_before>
+                <span node_ref=span_ref_before data-testid="before-cursor">
                     {
                         let before = split_first(before);
                         view! {
@@ -123,7 +123,11 @@ pub(super) fn Input(
                 >
                     " "
                 </span>
-                <span>{after}<span class="text-base opacity-60">{typeahead}</span></span>
+                <span data-testid="after-cursor">
+                    {after}<span class="text-base opacity-60" data-testid="typeahead">
+                        {typeahead}
+                    </span>
+                </span>
             </div>
             <input
                 type="text"

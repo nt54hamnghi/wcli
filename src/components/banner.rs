@@ -20,9 +20,9 @@ pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
     move || {
         visible.read().then(|| {
             view! {
-                <header>
+                <header class="whitespace-pre" data-testid="banner">
                     // hide the ascii art from screen readers as it's just a decorative element
-                    <p aria-hidden="true" class="mb-2 whitespace-pre text-primary">
+                    <p aria-hidden="true" class="mb-2 text-primary">
                         {ASCII_ART}
                     </p>
                     <p>"version 0.1.0"</p>

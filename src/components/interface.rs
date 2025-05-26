@@ -21,7 +21,7 @@ pub fn Interface() -> impl IntoView {
     // input value
     let (input, set_input) = signal("".to_owned());
     // node ref to auto scroll when input or history output overflows
-    let div_ref: NodeRef<html::Div> = NodeRef::new();
+    let div_ref: NodeRef<html::Main> = NodeRef::new();
     // history of input entries
     let (history, set_history) = create_history();
     // whether history is still loading
@@ -90,7 +90,7 @@ pub fn Interface() -> impl IntoView {
     });
 
     view! {
-        <div
+        <main
             class="flex overflow-auto flex-col gap-6 p-4 h-screen text-base transition-colors duration-100 ease-in font-terminal border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
             node_ref=div_ref
             // to make the div focusable and can receive keyboard events
@@ -162,7 +162,7 @@ pub fn Interface() -> impl IntoView {
                     })
                 }}
             </div>
-        </div>
+        </main>
     }
 }
 
