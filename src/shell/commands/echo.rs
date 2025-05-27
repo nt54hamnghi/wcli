@@ -14,7 +14,7 @@ impl Command for Echo {
 
     fn run(args: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         let result = if args.is_empty() {
-            Either::Left(view! { <br /> })
+            Either::Left(view! { <br data-testid="echo-empty" /> })
         } else {
             Either::Right(view! { <div class="text-base">{args.join(" ")}</div> })
         };
