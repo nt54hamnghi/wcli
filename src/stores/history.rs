@@ -16,7 +16,7 @@ impl Entry {
             .as_secs();
 
         #[cfg(not(test))]
-        let timestamp = (web_sys::js_sys::Date::now() / 1000.0).round() as u64;
+        let timestamp = web_sys::js_sys::Date::now() as u64;
 
         Self { timestamp, input }
     }

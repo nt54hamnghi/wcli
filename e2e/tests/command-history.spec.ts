@@ -206,3 +206,27 @@ test.describe('history navigation', () => {
 		await expect(beforeSpan).toBeEmpty();
 	});
 });
+
+test('commands appear in correct chronological order', async ({
+	page,
+	inputElements,
+}) => {
+	const { input } = inputElements;
+
+	await input.focus();
+
+	// Submit first command
+	await page.keyboard.type('echo first');
+	await page.keyboard.press('Enter');
+	// Submit second command
+	await page.keyboard.type('echo second');
+	await page.keyboard.press('Enter');
+
+	// Verify the commands appear in correct order (first command first)
+	const entries = page.getByRole('article');
+	const first = await entries.first().textContent();
+	const second = await entries.nth(1).textContent();
+
+	expect(first).toContain('echo first');
+	expect(second).toContain('echo second');
+});

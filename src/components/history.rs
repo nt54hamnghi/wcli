@@ -12,10 +12,10 @@ pub fn History(#[prop(into)] set_pending: SignalSetter<bool>) -> impl IntoView {
         <For each=move || history.read().buffer().to_vec() key=move |entry| entry.id() let(entry)>
             {
                 view! {
-                    <div>
+                    <article>
                         <Prompt value=entry.input.clone() />
                         {dispatch(entry.input, set_pending)}
-                    </div>
+                    </article>
                 }
             }
         </For>

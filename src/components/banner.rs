@@ -20,7 +20,7 @@ pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
     move || {
         visible.read().then(|| {
             view! {
-                <header class="whitespace-pre" data-testid="banner">
+                <div class="whitespace-pre" data-testid="banner">
                     // hide the ascii art from screen readers as it's just a decorative element
                     <p aria-hidden="true" class="mb-2 text-primary">
                         {ASCII_ART}
@@ -35,7 +35,7 @@ pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
                         " [command] for help about a specific command"
                     </p>
                     <p>"type "<code class="text-green-theme">fetch</code> " to display summary"</p>
-                </header>
+                </div>
             }
         })
     }
