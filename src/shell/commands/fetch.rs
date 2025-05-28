@@ -44,7 +44,11 @@ impl Command for Fetch {
 
 #[component]
 fn FetchLogo() -> impl IntoView {
-    view! { <p class="text-xs whitespace-pre text-orange-theme">{ASCII_LOGO}</p> }
+    view! {
+        <p class="text-xs whitespace-pre text-orange-theme" aria-hidden="true">
+            {ASCII_LOGO}
+        </p>
+    }
 }
 
 #[component]

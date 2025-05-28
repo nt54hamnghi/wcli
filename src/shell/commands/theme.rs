@@ -19,10 +19,11 @@ impl Command for Theme {
     theme -l, --list  list available themes";
 
     fn run(args: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
-        let (_theme, set_theme) = use_theme().unwrap();
+        let (theme, set_theme) = use_theme().unwrap();
 
         let selected = if args.is_empty() {
-            ThemeChoice::random()
+            let current = theme.get();
+            ThemeChoice::random_except(current)
         } else {
             let opt = args.first().expect("has at least 1 item");
 

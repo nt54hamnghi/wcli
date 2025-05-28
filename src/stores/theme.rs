@@ -1,7 +1,9 @@
 use leptos::prelude::*;
 use strum::{Display, EnumIter, EnumString, IntoEnumIterator, VariantNames};
 
-#[derive(Debug, Clone, Copy, Default, EnumIter, EnumString, Display, VariantNames)]
+#[derive(
+    Debug, Clone, Copy, Default, PartialEq, Eq, EnumIter, EnumString, Display, VariantNames,
+)]
 #[strum(serialize_all = "kebab-case")]
 pub enum Theme {
     #[default]
@@ -19,8 +21,9 @@ pub enum Theme {
 }
 
 impl Theme {
-    pub fn random() -> Theme {
-        fastrand::choice(Theme::iter()).expect("Theme enum is non-empty")
+    pub fn random_except(current: Theme) -> Theme {
+        let themes = Theme::iter().filter(|t| *t != current).collect::<Vec<_>>();
+        fastrand::choice(themes).expect("Theme enum is non-empty")
     }
 }
 
