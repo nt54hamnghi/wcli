@@ -60,19 +60,21 @@ impl Command for Projects {
 #[component]
 fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
     view! {
-        <div class="grid gap-x-6 grid-cols-[max-content_max-content_auto]">
-            <span class="contents">
-                <span class="text-info">NAME</span>
-                <span class="text-info">DESCRIPTION</span>
-                <span class="text-info">STARS</span>
-            </span>
-            {items.into_iter().map(|r| r.into_view()).collect_view()}
-        </div>
+        <table class="relative right-8 whitespace-nowrap border-separate table-auto border-spacing-x-8">
+            <thead>
+                <tr class="text-left text-info">
+                    <th>NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>STARS</th>
+                </tr>
+            </thead>
+            <tbody>{items.into_iter().map(|r| r.into_view()).collect_view()}</tbody>
+        </table>
     }
 }
 
 #[component]
-fn ProjectItem(
+fn ProjectRow(
     #[prop(into)] name: String,
     #[prop(into)] desc: String,
     #[prop(optional, into)] url: String,
@@ -83,24 +85,33 @@ fn ProjectItem(
         {if in_progress {
             Either::Left(
                 view! {
-                    <span class="contents">
-                        <span>{name}</span>
-                        <span>{desc}</span>
-                        <span>"In Progress"</span>
-                    </span>
+                    <tr>
+                        <td>{name}</td>
+                        <td>{desc}</td>
+                        <td>"In Progress"</td>
+                    </tr>
                 },
             )
         } else {
             Either::Right(
                 view! {
-                    <a class="contents group" href=url target="_blank" rel="noopener noreferrer">
-                        <span class="group-hover:underline">{name}</span>
-                        <span class="group-hover:underline">{desc}</span>
-                        <span class="flex gap-1 items-center group-hover:underline">
-                            <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
-                            <span>{star}</span>
-                        </span>
-                    </a>
+                    <tr>
+                        <a
+                            class="contents group"
+                            href=url
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <td class="group-hover:underline">{name}</td>
+                            <td class="group-hover:underline">{desc}</td>
+                            <td class="group-hover:underline">
+                                <span class="flex gap-1 items-center">
+                                    <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
+                                    <span>{star}</span>
+                                </span>
+                            </td>
+                        </a>
+                    </tr>
                 },
             )
         }}
@@ -127,7 +138,7 @@ impl Repository {
             in_progress,
         } = self;
         view! {
-            <ProjectItem
+            <ProjectRow
                 name=name
                 desc=description
                 url=html_url.unwrap_or_default()
