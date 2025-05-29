@@ -5,6 +5,7 @@ use leptos::prelude::*;
 use leptos::reactive::wrappers::write::SignalSetter;
 use leptos_icons::Icon;
 use serde::{Deserialize, Serialize};
+use web_sys::AbortSignal;
 
 use super::{Command, UnexpectedOption};
 
@@ -38,16 +39,38 @@ impl Command for Projects {
 
         Some(view! {
             <Transition fallback=move || view! { <p>"One moment..."</p> } set_pending=set_pending>
-                {Suspend::new(async move {
-                    let repos = repos.await;
-                    match format {
-                        Format::Json => {
-                            let json = serde_json::to_string_pretty(&repos).unwrap();
-                            view! { <pre class="mt-2">{json}</pre> }.into_any()
-                        }
-                        Format::Table => view! { <ProjectTable items=repos /> }.into_any(),
+                <ErrorBoundary fallback=|_| {
+                    view! {
+                        <div class="text-fail">
+                            <p>"error: failed to load project data"</p>
+                            <p>"try again later"</p>
+                        </div>
                     }
-                })}
+                }>
+                    {Suspend::new(async move {
+                        repos
+                            .await
+                            .and_then(|repos| {
+                                Ok(
+                                    match format {
+                                        Format::Table => {
+                                            view! { <ProjectTable items=repos /> }.into_any()
+                                        }
+                                        Format::Json => {
+                                            let json = serde_json::to_string_pretty(&repos)?;
+
+                                            view! {
+                                                <pre class="mt-2" data-testid="projects-json">
+                                                    {json}
+                                                </pre>
+                                            }
+                                                .into_any()
+                                        }
+                                    },
+                                )
+                            })
+                    })}
+                </ErrorBoundary>
             </Transition>
         }.into_any())
     }
@@ -63,9 +86,9 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
         <table class="relative right-8 whitespace-nowrap border-separate table-auto border-spacing-x-8">
             <thead>
                 <tr class="text-left text-info">
-                    <th>NAME</th>
-                    <th>DESCRIPTION</th>
-                    <th>STARS</th>
+                    <th role="columnheader">NAME</th>
+                    <th role="columnheader">DESCRIPTION</th>
+                    <th role="columnheader">STARS</th>
                 </tr>
             </thead>
             <tbody>{items.into_iter().map(|r| r.into_view()).collect_view()}</tbody>
@@ -149,23 +172,18 @@ impl Repository {
     }
 }
 
-async fn fetch_repos() -> Vec<Repository> {
+async fn fetch_repos() -> Result<Vec<Repository>, Error> {
     // proactively add 'sev' and 'yrc' to the list
     // these are private GitHub repos, but will be published later
-    let my_repos = ["seaq", "sublist3r-rs", "sev", "yrc"];
-    let resp = Request::get(BASE_URL).send().await;
+    let names = ["seaq", "sublist3r-rs", "sev", "yrc"];
+    let timeout_signal = AbortSignal::timeout_with_u32(5000);
+    let response = Request::get(BASE_URL)
+        .abort_signal(Some(&timeout_signal))
+        .send()
+        .await?;
 
-    let Ok(resp) = resp else {
-        return Vec::new();
-    };
-
-    let mut repos = resp
-        .json::<Vec<Repository>>()
-        .await
-        .unwrap_or_default()
-        .into_iter()
-        .filter(|r| my_repos.contains(&r.name.as_str()))
-        .collect::<Vec<_>>();
+    let mut repos = response.json::<Vec<Repository>>().await?;
+    repos.retain(|r| names.contains(&r.name.as_str()));
 
     // add in progress projects manually
     // these are private GitHub repos, but will be published later
@@ -186,5 +204,5 @@ async fn fetch_repos() -> Vec<Repository> {
         },
     ]);
 
-    repos
+    Ok(repos)
 }
