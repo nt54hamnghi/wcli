@@ -67,7 +67,9 @@ impl Palette {
         };
 
         view! {
-            <span class="pl-8 text-green-theme">{name}</span>
+            <span class="pl-8 text-green-theme" data-testid="help-oneline">
+                {name}
+            </span>
             <span class="text-base">{desc}</span>
         }
     }

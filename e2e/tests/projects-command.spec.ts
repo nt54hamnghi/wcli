@@ -2,8 +2,9 @@ import { expect } from '@playwright/test';
 
 import { test } from './fixtures/input';
 
+const URL = 'https://api.github.com/users/nt54hamnghi/repos';
+
 test.describe('projects command', () => {
-    const URL = 'https://api.github.com/users/nt54hamnghi/repos';
     const REPO_DATA = [
         {
             name: 'seaq',

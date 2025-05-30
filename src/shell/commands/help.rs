@@ -21,11 +21,11 @@ impl Command for Help {
             let msg = Palette::iter().map(|c| c.one_line()).collect_view();
             view! {
                 <div class="flex flex-col gap-4">
-                    <div>
+                    <div data-testid="help-commands">
                         <p>"Commands:"</p>
                         <div class="grid gap-x-6 grid-cols-[max-content_auto]">{msg}</div>
                     </div>
-                    <div>
+                    <div data-testid="help-keybindings">
                         <p>"Keybindings:"</p>
                         <div class="grid gap-x-6 grid-cols-[max-content_auto]">
                             <Keybinding key="[arrow up]" desc="previous command" />
@@ -42,7 +42,9 @@ impl Command for Help {
             let cmd = args.first().expect("has at least 1 item");
 
             match Palette::from_str(cmd.as_str()) {
-                Ok(cmd) => cmd.help().into_any(),
+                Ok(cmd) => {
+                    view! { <div data-testid="help-command-each">{cmd.help()}</div> }.into_any()
+                },
                 Err(_) => {
                     return Some(
                         view! {
@@ -68,7 +70,9 @@ impl Command for Help {
 #[component]
 fn Keybinding(#[prop(into)] key: &'static str, #[prop(into)] desc: &'static str) -> impl IntoView {
     view! {
-        <span class="pl-8 text-info">{key}</span>
-        <span>{desc}</span>
+        <span class="contents" data-testid="help-keybinding-item">
+            <span class="pl-8 text-info">{key}</span>
+            <span>{desc}</span>
+        </span>
     }
 }
