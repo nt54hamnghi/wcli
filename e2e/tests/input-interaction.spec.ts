@@ -214,3 +214,23 @@ test.describe('when input overflows', () => {
 		await expect(beforeSpan).toHaveText(current + suggestion);
 	});
 });
+
+test('Ctrl+C clears input', async ({
+	page,
+	inputElements,
+}) => {
+	const { input, beforeSpan } = inputElements;
+
+	await input.focus();
+	await page.keyboard.type('oops');
+
+	// Press Ctrl+C to clear input
+	await page.keyboard.press('Control+c');
+
+	// Verify input is cleared
+	await expect(input).toHaveValue('');
+	await expect(beforeSpan).toBeEmpty();
+
+	// Verify input stays focused
+	await expect(input).toBeFocused();
+});

@@ -2,54 +2,65 @@ import { expect } from '@playwright/test';
 
 import { test } from './fixtures/input';
 
-test.describe('clear command', () => {
-    test.beforeEach(async ({ page, inputElements }) => {
-        const { input } = inputElements;
+test.beforeEach(async ({ page, inputElements }) => {
+    const { input } = inputElements;
 
-        await input.focus();
+    await input.focus();
 
-        // Create some history to clear
-        await page.keyboard.type('echo hello');
-        await page.keyboard.press('Enter');
-        await page.keyboard.type('echo world');
-        await page.keyboard.press('Enter');
-    });
+    // Create some history to clear
+    await page.keyboard.type('echo hello');
+    await page.keyboard.press('Enter');
+    await page.keyboard.type('echo world');
+    await page.keyboard.press('Enter');
+});
 
-    test('clears command history from screen', async ({
-        page,
-        inputElements,
-    }) => {
-        const { input } = inputElements;
+test('clear command clears history and hides banner', async ({
+    page,
+    inputElements,
+}) => {
+    const { input } = inputElements;
 
-        // Verify history exists before clearing
-        await expect(page.getByText('hello', { exact: true })).toBeVisible();
-        await expect(page.getByText('world', { exact: true })).toBeVisible();
+    // Extract locators for reuse
+    const helloText = page.getByText('hello', { exact: true });
+    const worldText = page.getByText('world', { exact: true });
+    const banner = page.getByTestId('banner');
 
-        // Execute clear command
-        await page.keyboard.type('clear');
-        await page.keyboard.press('Enter');
+    // Verify history exists and banner is visible before clearing
+    await expect(helloText).toBeVisible();
+    await expect(worldText).toBeVisible();
+    await expect(banner).toBeVisible();
 
-        // Verify history is cleared
-        await expect(
-            page.getByText('hello', { exact: true })
-        ).not.toBeVisible();
-        await expect(
-            page.getByText('world', { exact: true })
-        ).not.toBeVisible();
-    });
+    // Execute clear command
+    await page.keyboard.type('clear');
+    await page.keyboard.press('Enter');
 
-    test('hides the banner', async ({ page, inputElements }) => {
-        const { input } = inputElements;
+    // Verify history is cleared and banner is hidden
+    await expect(helloText).not.toBeVisible();
+    await expect(worldText).not.toBeVisible();
+    await expect(banner).not.toBeVisible();
+});
 
-        // Verify banner is visible before clearing
-        const banner = page.getByTestId('banner');
-        await expect(banner).toBeVisible();
+test('Ctrl+L clears history and hides banner', async ({
+    page,
+    inputElements,
+}) => {
+    const { input } = inputElements;
 
-        // Execute clear command
-        await page.keyboard.type('clear');
-        await page.keyboard.press('Enter');
+    // Extract locators for reuse
+    const helloText = page.getByText('hello', { exact: true });
+    const worldText = page.getByText('world', { exact: true });
+    const banner = page.getByTestId('banner');
 
-        // Verify banner is hidden
-        await expect(banner).not.toBeVisible();
-    });
+    // Verify history exists and banner is visible before clearing
+    await expect(helloText).toBeVisible();
+    await expect(worldText).toBeVisible();
+    await expect(banner).toBeVisible();
+
+    // Press Ctrl+L shortcut
+    await page.keyboard.press('Control+l');
+
+    // Verify history is cleared and banner is hidden
+    await expect(helloText).not.toBeVisible();
+    await expect(worldText).not.toBeVisible();
+    await expect(banner).not.toBeVisible();
 });
