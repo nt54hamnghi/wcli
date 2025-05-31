@@ -134,6 +134,8 @@ pub(super) fn Input(
                 id=INPUT_ID
                 class="sr-only"
                 autofocus
+                // disable browser's default autocomplete
+                autocomplete="off"
                 node_ref=input_ref
                 prop:value=value
                 on:focus=move |_| set_is_blinking.set(true)

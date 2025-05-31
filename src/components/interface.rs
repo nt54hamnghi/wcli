@@ -65,7 +65,7 @@ pub fn Interface() -> impl IntoView {
             // to delay scrolling to after the browser's default auto-scroll to bring input into view
             set_timeout(
                 move || div.set_scroll_top(scroll_diff),
-                Duration::from_millis(25),
+                Duration::from_millis(100),
             );
         }
     };
@@ -80,12 +80,12 @@ pub fn Interface() -> impl IntoView {
         scroll_bottom();
     });
 
-    // focus on the input and scroll to the bottom
+    // scroll to the bottom and focus on the input
     // when history is fully loaded
     Effect::new(move || {
         if !pending.get() {
-            focus();
             scroll_bottom();
+            focus();
         }
     });
 
