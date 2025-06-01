@@ -8,8 +8,7 @@ use serde::{Deserialize, Serialize};
 use web_sys::AbortSignal;
 
 use super::{Command, UnexpectedOption};
-
-const BASE_URL: &str = "https://api.github.com/users/nt54hamnghi/repos";
+use crate::config::CONFIG;
 
 #[derive(Debug, Clone, Copy)]
 enum Format {
@@ -173,36 +172,27 @@ impl Repository {
 }
 
 async fn fetch_repos() -> Result<Vec<Repository>, Error> {
-    // proactively add 'sev' and 'yrc' to the list
-    // these are private GitHub repos, but will be published later
-    let names = ["seaq", "sublist3r-rs", "sev", "yrc"];
+    let config = &CONFIG.github;
+
     let timeout_signal = AbortSignal::timeout_with_u32(5000);
-    let response = Request::get(BASE_URL)
+    let response = Request::get(&config.api_url())
         .abort_signal(Some(&timeout_signal))
         .send()
         .await?;
 
     let mut repos = response.json::<Vec<Repository>>().await?;
-    repos.retain(|r| names.contains(&r.name.as_str()));
+    repos.retain(|r| config.repos.contains(&r.name));
 
     // add in progress projects manually
-    // these are private GitHub repos, but will be published later
-    repos.extend([
-        Repository {
-            name: "sev".to_owned(),
+    for item in &config.in_progress {
+        repos.push(Repository {
+            name: item.name.clone(),
             html_url: None,
-            description: "Securely inject environment variables with secrets".to_owned(),
+            description: item.description.clone(),
             stargazers_count: None,
             in_progress: true,
-        },
-        Repository {
-            name: "yrc".to_owned(),
-            html_url: None,
-            description: "You Remember Correctly - A memorable password generator".to_owned(),
-            stargazers_count: None,
-            in_progress: true,
-        },
-    ]);
+        });
+    }
 
     Ok(repos)
 }

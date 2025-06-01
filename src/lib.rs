@@ -4,6 +4,7 @@ use stores::theme::create_theme;
 
 // Modules
 mod components;
+mod config;
 mod shell;
 mod stores;
 

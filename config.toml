@@ -1,0 +1,18 @@
+title = "hamnghi.computer"
+name = "Nghi Nguyen"
+email = "hamnghi.nguyentrieu@gmail.com"
+
+[prompt]
+hostname = "hamnghi.computer"
+username = "guest"
+
+[github]
+username = "nt54hamnghi"
+repos = ["seaq", "sublist3r-rs"]
+in_progress = [
+    { name = "sev", description = "Securely inject environment variables with secrets" },
+    { name = "yrc", description = "You Remember Correctly - A memorable password generator" },
+]
+
+[linkedin]
+username = "hamnghi"

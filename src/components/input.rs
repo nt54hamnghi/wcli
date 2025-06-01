@@ -72,8 +72,8 @@ pub(super) fn Input(
         set_timeout(
             move || {
                 // TODO: calculate the prompt offset_width dynamically
-                // 225 is the offset_width of the prompt, which is hardcoded
-                let scroll_diff = span.offset_width() - div.client_width() + 225;
+                // 270 is the offset_width of the prompt, which is hardcoded
+                let scroll_diff = span.offset_width() - div.client_width() + 270;
                 div.set_scroll_left(scroll_diff)
             },
             Duration::from_millis(5),

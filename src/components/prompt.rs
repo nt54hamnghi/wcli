@@ -1,9 +1,11 @@
 use leptos::prelude::*;
 
+use crate::config::CONFIG;
+
 #[component]
 pub fn Prompt(
-    #[prop(default = "guess")] user: &'static str,
-    #[prop(default = "host")] host: &'static str,
+    #[prop(into, default = CONFIG.prompt.username.clone())] user: String,
+    #[prop(into, default = CONFIG.prompt.hostname.clone())] host: String,
     #[prop(default = ":~$")] prefix: &'static str,
     #[prop(optional)] value: String,
 ) -> impl IntoView {
