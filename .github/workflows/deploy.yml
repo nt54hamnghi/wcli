@@ -45,7 +45,7 @@ jobs:
         # relatively as favicon.ico. if we skip public-url option, the href paths will instead request username.github.io/favicon.ico which
         # will obviously return error 404 not found.
         # run: ./trunk build --release --public-url "${GITHUB_REPOSITORY#*/}"
-        run: ./trunk build --release
+        run: ./trunk build --release --public-url "${{vars.PUBLIC_URL}}"
 
       # Deploy to gh-pages branch
       - name: Deploy
