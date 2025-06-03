@@ -23,7 +23,7 @@
 
 	--font-terminal: "Cascadia Code", var(--font-mono);
 
-	--color-base: var(--color-white);
+	--color-foreground: var(--color-white);
 	--color-muted: #bac2de;
 	--color-primary: var(--color-primary);
 	--color-pass: var(--color-green);

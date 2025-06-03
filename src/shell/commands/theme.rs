@@ -57,12 +57,8 @@ impl Command for Theme {
         set_theme.set(selected);
 
         Some(
-            view! {
-                <div class="text-base">
-                    <p>{format!("theme '{selected}' selected")}</p>
-                </div>
-            }
-            .into_any(),
+            view! { <p class="text-foreground">{format!("theme '{selected}' selected")}</p> }
+                .into_any(),
         )
     }
 

@@ -70,7 +70,7 @@ impl Palette {
             <span class="pl-8 text-green-theme" data-testid="help-oneline">
                 {name}
             </span>
-            <span class="text-base">{desc}</span>
+            <span class="text-foreground">{desc}</span>
         }
     }
 
@@ -96,7 +96,7 @@ pub trait Command {
 
     fn help() -> impl IntoView {
         view! {
-            <div class="text-base">
+            <div class="text-foreground">
                 <p>
                     <span class="text-green-theme">{Self::NAME}</span>
                     <span>" - " {Self::DESCRIPTION}</span>

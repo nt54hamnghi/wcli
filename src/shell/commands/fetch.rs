@@ -35,7 +35,7 @@ impl Command for Fetch {
 
     fn run(_: Vec<String>, _: SignalSetter<bool>) -> Option<impl IntoView> {
         Some(view! {
-            <div class="flex gap-12 items-center">
+            <div class="flex flex-col gap-6 items-start lg:flex-row lg:gap-12 lg:items-center">
                 <FetchLogo />
                 <FetchDetails />
             </div>
@@ -72,7 +72,11 @@ fn FetchDetails() -> impl IntoView {
             <p class="flex gap-2 items-center">
                 <Icon icon=i::FaEnvelopeSolid height="1.125em" width="1.125em" />
                 <span>"email: "</span>
-                <a href=format!("mailto:{}", email) target="_blank" class="text-orange-theme">
+                <a
+                    href=format!("mailto:{}", email)
+                    target="_blank"
+                    class="hover:underline text-orange-theme"
+                >
                     {email.clone()}
                 </a>
             </p>
@@ -83,7 +87,7 @@ fn FetchDetails() -> impl IntoView {
                     href=github.url()
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-orange-theme"
+                    class="hover:underline text-orange-theme"
                 >
                     {github.short_url()}
                 </a>
@@ -95,7 +99,7 @@ fn FetchDetails() -> impl IntoView {
                     href=linkedin.url()
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-orange-theme"
+                    class="hover:underline text-orange-theme"
                 >
                     {linkedin.short_url()}
                 </a>

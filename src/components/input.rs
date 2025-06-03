@@ -88,9 +88,9 @@ pub(super) fn Input(
     });
 
     view! {
-        <div class="flex relative items-center">
+        <div class="flex relative items-center md:bottom-0.5 sm:bottom-[0.075rem]">
             <div
-                class="relative pr-12 text-base whitespace-pre"
+                class="relative pr-12 whitespace-pre text-foreground"
                 on:click=move |_| {
                     input_ref.get().expect("should be mounted").focus().unwrap();
                 }
@@ -115,7 +115,7 @@ pub(super) fn Input(
                 <span
                     class=move || {
                         format!(
-                            "inline-block absolute top-1/2 bg-base -translate-y-1/2 h-[1.125em] {}",
+                            "inline-block absolute top-1/2 bg-foreground -translate-y-1/2 h-[1.125em] {}",
                             if is_blinking.get() { "animate-blink" } else { "" },
                         )
                     }
@@ -124,7 +124,7 @@ pub(super) fn Input(
                     " "
                 </span>
                 <span data-testid="after-cursor">
-                    {after}<span class="text-base opacity-60" data-testid="typeahead">
+                    {after}<span class="opacity-60" data-testid="typeahead">
                         {typeahead}
                     </span>
                 </span>

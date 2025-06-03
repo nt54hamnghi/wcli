@@ -28,7 +28,7 @@ fn Home() -> impl IntoView {
     view! {
         <ErrorBoundary fallback=|_| {
             view! {
-                <div class="p-4 w-screen h-screen text-base bg-surface">
+                <div class="p-4 w-screen h-screen text-fail bg-surface">
                     <h1>"Something went wrong!"</h1>
                 </div>
             }

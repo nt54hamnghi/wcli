@@ -91,7 +91,7 @@ pub fn Interface() -> impl IntoView {
 
     view! {
         <main
-            class="flex overflow-auto flex-col gap-6 p-4 h-screen text-base transition-colors duration-100 ease-in font-terminal border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
+            class="flex overflow-auto flex-col gap-6 p-4 h-screen text-xs transition-colors duration-100 ease-in sm:text-sm md:text-base text-foreground font-terminal border-3 bg-surface box-border border-unfocus scroll-smooth focus-within:border-primary"
             node_ref=div_ref
             // to make the div focusable and can receive keyboard events
             // without placing it in the tab order
@@ -102,11 +102,11 @@ pub fn Interface() -> impl IntoView {
         >
             <Banner visible=visible />
             <History set_pending=set_pending />
-            <div class="flex gap-4 items-center pb-8">
-                {move || {
-                    let show = !pending.get();
-                    show.then(move || {
-                        view! {
+            {move || {
+                let show = !pending.get();
+                show.then(move || {
+                    view! {
+                        <div class="flex gap-4 items-center pb-8">
                             <Prompt />
                             <Input
                                 value=input
@@ -158,10 +158,10 @@ pub fn Interface() -> impl IntoView {
                                     };
                                 }
                             />
-                        }
-                    })
-                }}
-            </div>
+                        </div>
+                    }
+                })
+            }}
         </main>
     }
 }

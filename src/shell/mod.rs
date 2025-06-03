@@ -29,7 +29,7 @@ pub fn dispatch(input: String, set_pending: SignalSetter<bool>) -> impl IntoView
 
 fn not_found(cmd: String) -> impl IntoView {
     view! {
-        <div class="text-base">
+        <div class="text-foreground">
             <p>"command not found: "<span class="text-fail">{cmd}</span></p>
             <p>"try "<span class="text-pass">help</span> " to get a list of available commands"</p>
         </div>

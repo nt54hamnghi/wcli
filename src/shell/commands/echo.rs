@@ -16,7 +16,7 @@ impl Command for Echo {
         let result = if args.is_empty() {
             Either::Left(view! { <br data-testid="echo-empty" /> })
         } else {
-            Either::Right(view! { <div class="text-base">{args.join(" ")}</div> })
+            Either::Right(view! { <div class="text-foreground">{args.join(" ")}</div> })
         };
 
         Some(result)

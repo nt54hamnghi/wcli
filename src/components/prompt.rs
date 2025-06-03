@@ -10,7 +10,11 @@ pub fn Prompt(
     #[prop(optional)] value: String,
 ) -> impl IntoView {
     view! {
-        <div class="flex gap-4 items-center text-base" role="group" aria-label="command prompt">
+        <div
+            class="flex gap-4 items-center text-foreground"
+            role="group"
+            aria-label="command prompt"
+        >
             <code class="inline-block whitespace-nowrap">
                 {user}<span class="text-red-theme">@</span>{host}
                 // hide the prefix from screen readers as it's just a decorative element

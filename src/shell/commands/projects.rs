@@ -82,24 +82,34 @@ impl Command for Projects {
 #[component]
 fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
     view! {
-        <table class="relative right-8 whitespace-nowrap border-separate table-auto border-spacing-x-8">
+        <table class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8">
             <thead>
                 <tr class="text-left text-info">
-                    <th role="columnheader">NAME</th>
-                    <th role="columnheader">DESCRIPTION</th>
-                    <th role="columnheader">STARS</th>
+                    <th class="font-normal" role="columnheader">
+                        NAME
+                    </th>
+                    <th class="font-normal" role="columnheader">
+                        DESCRIPTION
+                    </th>
+                    <th class="font-normal" role="columnheader">
+                        STARS
+                    </th>
                 </tr>
             </thead>
-            <tbody>{items.into_iter().map(|r| r.into_view()).collect_view()}</tbody>
+            <tbody>{items.clone().into_iter().map(|r| r.into_row_view()).collect_view()}</tbody>
         </table>
+
+        <div class="flex flex-col gap-2 sm:gap-4 lg:hidden">
+            {items.clone().into_iter().map(|r| r.into_card_view()).collect_view()}
+        </div>
     }
 }
 
 #[component]
 fn ProjectRow(
-    #[prop(into)] name: String,
-    #[prop(into)] desc: String,
-    #[prop(optional, into)] url: String,
+    name: String,
+    desc: String,
+    #[prop(optional)] url: String,
     #[prop(optional)] star: usize,
     #[prop(optional)] in_progress: bool,
 ) -> impl IntoView {
@@ -110,7 +120,7 @@ fn ProjectRow(
                     <tr>
                         <td>{name}</td>
                         <td>{desc}</td>
-                        <td>"In Progress"</td>
+                        <td class="opacity-60">"In Progress"</td>
                     </tr>
                 },
             )
@@ -140,6 +150,47 @@ fn ProjectRow(
     }
 }
 
+#[component]
+fn ProjectCard(
+    name: String,
+    desc: String,
+    #[prop(optional)] url: String,
+    #[prop(optional)] star: usize,
+    #[prop(optional)] in_progress: bool,
+) -> impl IntoView {
+    view! {
+        {if in_progress {
+            Either::Left(
+                view! {
+                    <span class="flex flex-col">
+                        <span class="text-info">{name}</span>
+                        <span>{desc}</span>
+                        <span class="opacity-60">"In Progress"</span>
+                    </span>
+                },
+            )
+        } else {
+            Either::Right(
+                view! {
+                    <a
+                        class="flex flex-col group"
+                        href=url
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="group-hover:underline text-info">{name}</span>
+                        <span>{desc}</span>
+                        <span class="flex gap-1 items-center">
+                            <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
+                            <span>{star}</span>
+                        </span>
+                    </a>
+                },
+            )
+        }}
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Repository {
     name: String,
@@ -151,7 +202,7 @@ struct Repository {
 }
 
 impl Repository {
-    fn into_view(self) -> impl IntoView {
+    fn into_row_view(self) -> impl IntoView {
         let Self {
             name,
             html_url,
@@ -161,6 +212,25 @@ impl Repository {
         } = self;
         view! {
             <ProjectRow
+                name=name
+                desc=description
+                url=html_url.unwrap_or_default()
+                star=stargazers_count.unwrap_or_default()
+                in_progress=in_progress
+            />
+        }
+    }
+
+    fn into_card_view(self) -> impl IntoView {
+        let Self {
+            name,
+            html_url,
+            description,
+            stargazers_count,
+            in_progress,
+        } = self;
+        view! {
+            <ProjectCard
                 name=name
                 desc=description
                 url=html_url.unwrap_or_default()
