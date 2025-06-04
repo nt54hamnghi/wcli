@@ -14,6 +14,7 @@ pub struct Config {
     pub prompt: Prompt,
     pub github: Github,
     pub linkedin: Option<Linkedin>,
+    pub youtube: Option<Youtube>,
 }
 
 #[derive(Default, Debug, Clone, Deserialize)]
@@ -63,5 +64,20 @@ impl Linkedin {
 
     pub fn short_url(&self) -> String {
         format!("linkedin.com/in/{}", self.username)
+    }
+}
+
+#[derive(Default, Debug, Clone, Deserialize)]
+pub struct Youtube {
+    pub channel_id: String,
+}
+
+impl Youtube {
+    pub fn url(&self) -> String {
+        format!("https://www.youtube.com/{}", self.channel_id)
+    }
+
+    pub fn short_url(&self) -> String {
+        format!("youtube.com/{}", self.channel_id)
     }
 }

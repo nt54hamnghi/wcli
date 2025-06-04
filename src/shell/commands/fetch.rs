@@ -59,6 +59,7 @@ fn FetchDetails() -> impl IntoView {
         email,
         github,
         linkedin,
+        youtube,
         ..
     } = CONFIG.clone();
 
@@ -105,6 +106,24 @@ fn FetchDetails() -> impl IntoView {
                                 class="hover:underline text-orange-theme"
                             >
                                 {linkedin.short_url()}
+                            </a>
+                        </p>
+                    }
+                })}
+            {youtube
+                .map(|youtube| {
+
+                    view! {
+                        <p class="flex gap-2 items-center">
+                            <Icon icon=i::FaYoutubeBrands height="1.125em" width="1.125em" />
+                            <span>"youtube: "</span>
+                            <a
+                                href=youtube.url()
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="hover:underline text-orange-theme"
+                            >
+                                {youtube.short_url()}
                             </a>
                         </p>
                     }
