@@ -8,7 +8,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@iarna/toml": "^2.2.5",
     "@playwright/test": "^1.52.0",
-    "@types/node": "^22.15.21"
+    "@types/node": "^22.15.29"
   }
 }

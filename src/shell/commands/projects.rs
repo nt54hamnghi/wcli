@@ -82,7 +82,10 @@ impl Command for Projects {
 #[component]
 fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
     view! {
-        <table class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8">
+        <table
+            class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8"
+            data-testid="projects-table"
+        >
             <thead>
                 <tr class="text-left text-info">
                     <th class="font-normal" role="columnheader">
@@ -99,7 +102,7 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
             <tbody>{items.clone().into_iter().map(|r| r.into_row_view()).collect_view()}</tbody>
         </table>
 
-        <div class="flex flex-col gap-2 sm:gap-4 lg:hidden">
+        <div class="flex flex-col gap-2 sm:gap-4 lg:hidden" data-testid="projects-list">
             {items.clone().into_iter().map(|r| r.into_card_view()).collect_view()}
         </div>
     }

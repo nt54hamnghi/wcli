@@ -36,11 +36,11 @@ export default defineConfig({
 		trace: 'on-first-retry',
 
 		// Default timeout for each Playwright action in milliseconds, defaults to 0(no timeout).
-		actionTimeout: 0
+		actionTimeout: 0,
 	},
 
 	expect: {
-		timeout: 7000
+		timeout: 7000,
 	},
 
 	/* Configure projects for major browsers */

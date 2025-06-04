@@ -215,10 +215,7 @@ test.describe('when input overflows', () => {
 	});
 });
 
-test('Ctrl+C clears input', async ({
-	page,
-	inputElements,
-}) => {
+test('Ctrl+C clears input', async ({ page, inputElements }) => {
 	const { input, beforeSpan } = inputElements;
 
 	await input.focus();
