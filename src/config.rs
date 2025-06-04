@@ -13,7 +13,7 @@ pub struct Config {
     pub email: String,
     pub prompt: Prompt,
     pub github: Github,
-    pub linkedin: Linkedin,
+    pub linkedin: Option<Linkedin>,
 }
 
 #[derive(Default, Debug, Clone, Deserialize)]
@@ -25,7 +25,9 @@ pub struct Prompt {
 #[derive(Default, Debug, Clone, Deserialize)]
 pub struct Github {
     pub username: String,
+    #[serde(default)]
     pub repos: Vec<String>,
+    #[serde(default)]
     pub in_progress: Vec<InProgress>,
 }
 

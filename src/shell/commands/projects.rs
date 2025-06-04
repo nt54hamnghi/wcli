@@ -83,7 +83,7 @@ impl Command for Projects {
 fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
     view! {
         <table
-            class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8"
+            class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8 border-spacing-y-1"
             data-testid="projects-table"
         >
             <thead>
@@ -122,7 +122,7 @@ fn ProjectRow(
                 view! {
                     <tr>
                         <td>{name}</td>
-                        <td>{desc}</td>
+                        <td class="whitespace-normal max-w-[100ch]">{desc}</td>
                         <td class="opacity-60">"In Progress"</td>
                     </tr>
                 },
@@ -138,7 +138,9 @@ fn ProjectRow(
                             rel="noopener noreferrer"
                         >
                             <td class="group-hover:underline">{name}</td>
-                            <td class="group-hover:underline">{desc}</td>
+                            <td class="whitespace-normal group-hover:underline max-w-[100ch]">
+                                {desc}
+                            </td>
                             <td class="group-hover:underline">
                                 <span class="flex gap-1 items-center">
                                     <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
@@ -254,7 +256,9 @@ async fn fetch_repos() -> Result<Vec<Repository>, Error> {
         .await?;
 
     let mut repos = response.json::<Vec<Repository>>().await?;
-    repos.retain(|r| config.repos.contains(&r.name));
+    if !config.repos.is_empty() {
+        repos.retain(|r| config.repos.contains(&r.name));
+    }
 
     // add in progress projects manually
     for item in &config.in_progress {

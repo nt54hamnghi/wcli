@@ -92,18 +92,23 @@ fn FetchDetails() -> impl IntoView {
                     {github.short_url()}
                 </a>
             </p>
-            <p class="flex gap-2 items-center">
-                <Icon icon=i::FaLinkedinBrands height="1.125em" width="1.125em" />
-                <span>"linkedin: "</span>
-                <a
-                    href=linkedin.url()
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="hover:underline text-orange-theme"
-                >
-                    {linkedin.short_url()}
-                </a>
-            </p>
+            {linkedin
+                .map(|linkedin| {
+                    view! {
+                        <p class="flex gap-2 items-center">
+                            <Icon icon=i::FaLinkedinBrands height="1.125em" width="1.125em" />
+                            <span>"linkedin: "</span>
+                            <a
+                                href=linkedin.url()
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="hover:underline text-orange-theme"
+                            >
+                                {linkedin.short_url()}
+                            </a>
+                        </p>
+                    }
+                })}
         </div>
     }
 }

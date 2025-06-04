@@ -6,13 +6,20 @@ email = "hamnghi.nguyentrieu@gmail.com"
 hostname = "hamnghi.computer"
 username = "guest"
 
+# GitHub profile configuration
 [github]
+# Username is used for displaying profile information in the `fetch` command
+# and for loading repository data in the `projects` command (https://api.github.com/users/{username}/repos)
 username = "nt54hamnghi"
+# List of specific repositories to display in the `fetch` command
+# Omit this field to include all repositories from the API
 repos = ["seaq", "sublist3r-rs"]
+# List of in progress repositories (optional)
 in_progress = [
     { name = "sev", description = "Securely inject environment variables with secrets" },
     { name = "yrc", description = "You Remember Correctly - A memorable password generator" },
 ]
 
+# LinkedIn profile configuration (optional)
 [linkedin]
 username = "hamnghi"
