@@ -2,6 +2,7 @@ use leptos::prelude::*;
 use leptos::reactive::wrappers::write::SignalSetter;
 use strum::{Display, EnumIter, EnumString, VariantNames};
 
+use self::ack::Ack;
 use self::clear::Clear;
 use self::echo::Echo;
 use self::fetch::Fetch;
@@ -9,6 +10,7 @@ use self::help::Help;
 use self::projects::Projects;
 use self::theme::Theme;
 
+pub mod ack;
 pub mod clear;
 pub mod echo;
 pub mod fetch;
@@ -19,6 +21,7 @@ pub mod theme;
 #[derive(Debug, Clone, Copy, EnumString, EnumIter, Display, VariantNames)]
 #[strum(serialize_all = "snake_case")]
 pub enum Palette {
+    Ack,
     Clear,
     Echo,
     Fetch,
@@ -34,6 +37,7 @@ impl Palette {
 
     pub fn run(self, args: Vec<String>, set_pending: SignalSetter<bool>) -> impl IntoView {
         match self {
+            Self::Ack => Ack::run(args, set_pending).into_any(),
             Self::Clear => Clear::run(args, set_pending).into_any(),
             Self::Echo => Echo::run(args, set_pending).into_any(),
             Self::Fetch => Fetch::run(args, set_pending).into_any(),
@@ -46,6 +50,7 @@ impl Palette {
     /// Returns a help message
     pub fn help(self) -> impl IntoView {
         match self {
+            Self::Ack => Ack::help().into_any(),
             Self::Clear => Clear::help().into_any(),
             Self::Echo => Echo::help().into_any(),
             Self::Fetch => Fetch::help().into_any(),
@@ -58,6 +63,7 @@ impl Palette {
     /// Returns a one-line description
     pub fn one_line(self) -> impl IntoView {
         let (name, desc) = match self {
+            Self::Ack => (Ack::NAME, Ack::DESCRIPTION),
             Self::Clear => (Clear::NAME, Clear::DESCRIPTION),
             Self::Echo => (Echo::NAME, Echo::DESCRIPTION),
             Self::Fetch => (Fetch::NAME, Fetch::DESCRIPTION),
