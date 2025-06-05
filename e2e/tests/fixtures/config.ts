@@ -29,8 +29,8 @@ type Config = {
 export const test = base.extend<{ config: Config; }>({
     config: async ({ }, use) => {
         // 1. Build absolute path to config.toml
-        // __dirname = current file's directory (/workspaces/hn/e2e/tests/fixtures)
-        // ../../../ goes up 3 folders to reach /workspaces/hn/
+        // __dirname = current file's directory (/workspaces/wcli/e2e/tests/fixtures)
+        // ../../../ goes up 3 folders to reach /workspaces/wcli/
         const configPath = path.resolve(__dirname, '../../../config.toml');
 
         // 2. Read the TOML file as a string from disk

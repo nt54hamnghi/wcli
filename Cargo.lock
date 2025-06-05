@@ -547,29 +547,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
 
 [[package]]
-name = "hn"
-version = "0.1.0"
-dependencies = [
- "console_error_panic_hook",
- "console_log",
- "fastrand",
- "gloo-net",
- "icondata",
- "leptos",
- "leptos_icons",
- "leptos_meta",
- "log",
- "rstest",
- "serde",
- "serde_json",
- "strum",
- "toml",
- "wasm-bindgen",
- "wasm-bindgen-test",
- "web-sys",
-]
-
-[[package]]
 name = "html-escape"
 version = "0.2.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1987,6 +1964,29 @@ dependencies = [
  "js-sys",
  "wasm-bindgen",
  "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
+name = "wcli"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "fastrand",
+ "gloo-net",
+ "icondata",
+ "leptos",
+ "leptos_icons",
+ "leptos_meta",
+ "log",
+ "rstest",
+ "serde",
+ "serde_json",
+ "strum",
+ "toml",
+ "wasm-bindgen",
+ "wasm-bindgen-test",
  "web-sys",
 ]
 

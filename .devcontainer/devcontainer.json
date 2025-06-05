@@ -7,7 +7,7 @@
 		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [
-		"--name=hn_devcontainer"
+		"--name=wcli_devcontainer"
 	],
 	"customizations": {
 		"vscode": {

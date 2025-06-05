@@ -13,7 +13,7 @@ username = "guest"
 username = "nt54hamnghi"
 # List of specific repositories to display in the `fetch` command
 # Omit this field to include all repositories from the API
-repos = ["seaq", "sublist3r-rs"]
+repos = ["seaq", "sublist3r-rs", "wcli"]
 # List of in progress repositories (optional)
 in_progress = [
     { name = "sev", description = "Securely inject environment variables with secrets" },

@@ -1,12 +1,12 @@
-# Terminal Portfolio
+# wcli
 
-A terminal-style portfolio website built with [Leptos](https://leptos.dev/) and [Tailwind CSS](https://tailwindcss.com/).
+A cli-style portfolio website built with [Leptos](https://leptos.dev/) and [Tailwind CSS](https://tailwindcss.com/).
 
 ## Features
 
 - Interactive CLI in the browser
-- Switchable terminal themes
-- Command history with navigation (with up/down arrow keys)
+- Switchable themes
+- Command history with navigation
 - Tab-completion for commands
 - Easy configuration through a TOML file (WIP)
 

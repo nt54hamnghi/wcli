@@ -1,5 +1,5 @@
 [package]
-name = "hn"
+name = "wcli"
 version = "0.1.0"
 edition = "2024"
 authors = ["nt54hamnghi <hamnghi250699@gmail.com>"]

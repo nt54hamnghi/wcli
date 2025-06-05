@@ -1,5 +1,5 @@
-use hn::App;
 use leptos::prelude::*;
+use wcli::App;
 
 fn main() {
     // set up logging
