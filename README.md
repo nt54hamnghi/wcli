@@ -12,6 +12,8 @@ A cli-style portfolio website built with [Leptos](https://leptos.dev/) and [Tail
 
 Visit the live site: [hamnghi.computer](https://hamnghi.computer)
 
+<img src="imgs/demo.png" alt="demo" width="700px"></a>
+
 ## Deployment
 
 TODO: Add deployment instructions
