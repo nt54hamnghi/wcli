@@ -1,6 +1,6 @@
 # wcli
 
-A cli-style portfolio website built with [Leptos](https://leptos.dev/) and [Tailwind CSS](https://tailwindcss.com/).
+A terminal-style portfolio website built with [Leptos](https://leptos.dev/) and [Tailwind CSS](https://tailwindcss.com/).
 
 ## Demo
 
