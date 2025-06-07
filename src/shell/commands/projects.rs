@@ -1,4 +1,7 @@
-use gloo_net::http::Request;
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use gloo_net::http::{Request, Response};
 use icondata as i;
 use leptos::either::Either;
 use leptos::prelude::*;
@@ -8,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use web_sys::AbortSignal;
 
 use super::{Command, UnexpectedOption};
-use crate::config::CONFIG;
+use crate::config::{CONFIG, InProgress};
 
 #[derive(Debug, Clone, Copy)]
 enum Format {
@@ -27,6 +30,7 @@ impl Command for Projects {
 
     fn run(args: Vec<String>, set_pending: SignalSetter<bool>) -> Option<impl IntoView> {
         let repos = LocalResource::new(fetch_repos);
+        let linguist = LocalResource::new(fetch_linguist);
 
         let format = match args.first().map(|s| s.as_str()).unwrap_or("") {
             "-j" | "--json" => Format::Json,
@@ -47,6 +51,8 @@ impl Command for Projects {
                     }
                 }>
                     {Suspend::new(async move {
+                        let linguist = linguist.await?;
+                        provide_context(Arc::new(linguist));
                         repos
                             .await
                             .and_then(|repos| {
@@ -83,7 +89,7 @@ impl Command for Projects {
 fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
     view! {
         <table
-            class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8 border-spacing-y-1"
+            class="hidden relative right-8 whitespace-nowrap border-separate table-auto lg:table border-spacing-x-8"
             data-testid="projects-table"
         >
             <thead>
@@ -93,6 +99,9 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
                     </th>
                     <th class="font-normal" role="columnheader">
                         DESCRIPTION
+                    </th>
+                    <th class="font-normal" role="columnheader">
+                        LANGUAGE
                     </th>
                     <th class="font-normal" role="columnheader">
                         STARS
@@ -111,7 +120,8 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
 #[component]
 fn ProjectRow(
     name: String,
-    desc: String,
+    desc: Option<String>,
+    lang: Option<String>,
     #[prop(optional)] url: String,
     #[prop(optional)] star: usize,
     #[prop(optional)] in_progress: bool,
@@ -123,6 +133,7 @@ fn ProjectRow(
                     <tr>
                         <td>{name}</td>
                         <td class="whitespace-normal max-w-[100ch]">{desc}</td>
+                        <td>{lang.map(|l| view! { <Language lang=l /> })}</td>
                         <td class="opacity-60">"In Progress"</td>
                     </tr>
                 },
@@ -141,11 +152,9 @@ fn ProjectRow(
                             <td class="whitespace-normal group-hover:underline max-w-[100ch]">
                                 {desc}
                             </td>
+                            <td>{lang.map(|l| view! { <Language lang=l /> })}</td>
                             <td class="group-hover:underline">
-                                <span class="flex gap-1 items-center">
-                                    <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
-                                    <span>{star}</span>
-                                </span>
+                                <Stargazers count=star />
                             </td>
                         </a>
                     </tr>
@@ -158,7 +167,8 @@ fn ProjectRow(
 #[component]
 fn ProjectCard(
     name: String,
-    desc: String,
+    desc: Option<String>,
+    lang: Option<String>,
     #[prop(optional)] url: String,
     #[prop(optional)] star: usize,
     #[prop(optional)] in_progress: bool,
@@ -167,10 +177,11 @@ fn ProjectCard(
         {if in_progress {
             Either::Left(
                 view! {
-                    <span class="flex flex-col">
+                    <span class="flex flex-col gap-1 sm:gap-0">
                         <span class="text-info">{name}</span>
                         <span>{desc}</span>
-                        <span class="opacity-60">"In Progress"</span>
+                        {lang.map(|l| view! { <Language lang=l /> })}
+                        <span class="opacity-60">In Progress</span>
                     </span>
                 },
             )
@@ -178,16 +189,15 @@ fn ProjectCard(
             Either::Right(
                 view! {
                     <a
-                        class="flex flex-col group"
+                        class="flex flex-col gap-1 sm:gap-0 group"
                         href=url
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         <span class="group-hover:underline text-info">{name}</span>
                         <span>{desc}</span>
-                        <span class="flex gap-1 items-center">
-                            <Icon icon=i::FaStarRegular height="1.125em" width="1.125em" />
-                            <span>{star}</span>
+                        <span class="flex gap-2 items-center">
+                            {lang.map(|l| view! { <Language lang=l /> })} <Stargazers count=star />
                         </span>
                     </a>
                 },
@@ -196,52 +206,86 @@ fn ProjectCard(
     }
 }
 
+#[component]
+fn Stargazers(count: usize) -> impl IntoView {
+    view! {
+        <span class="flex gap-1 items-center">
+            <span class="inline-block relative bottom-[2px]">
+                <Icon icon=i::FaStarRegular height="1rem" width="1rem" />
+            </span>
+            <span>{count}</span>
+        </span>
+    }
+}
+
+#[component]
+fn Language(lang: String) -> impl IntoView {
+    let linguist = expect_context::<Arc<Linguist>>();
+    let color = linguist
+        .get(&lang)
+        .and_then(|l| l.color.as_deref())
+        .unwrap_or("var(--color-white)");
+
+    view! {
+        <span class="flex gap-2 items-center">
+            <span
+                class="inline-block relative w-2 h-2 rounded-full bottom-[1px]"
+                aria-hidden="true"
+                style=format!("background-color: {}", color)
+            ></span>
+            <span>{lang}</span>
+        </span>
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Repository {
     name: String,
+    description: Option<String>,
     html_url: Option<String>,
-    description: String,
     stargazers_count: Option<usize>,
+    language: Option<String>,
     #[serde(skip_deserializing)]
     in_progress: bool,
 }
 
 impl Repository {
     fn into_row_view(self) -> impl IntoView {
-        let Self {
-            name,
-            html_url,
-            description,
-            stargazers_count,
-            in_progress,
-        } = self;
         view! {
             <ProjectRow
-                name=name
-                desc=description
-                url=html_url.unwrap_or_default()
-                star=stargazers_count.unwrap_or_default()
-                in_progress=in_progress
+                name=self.name
+                desc=self.description
+                lang=self.language
+                url=self.html_url.unwrap_or_default()
+                star=self.stargazers_count.unwrap_or_default()
+                in_progress=self.in_progress
             />
         }
     }
 
     fn into_card_view(self) -> impl IntoView {
-        let Self {
-            name,
-            html_url,
-            description,
-            stargazers_count,
-            in_progress,
-        } = self;
         view! {
             <ProjectCard
-                name=name
-                desc=description
-                url=html_url.unwrap_or_default()
-                star=stargazers_count.unwrap_or_default()
-                in_progress=in_progress
+                name=self.name
+                desc=self.description
+                lang=self.language
+                url=self.html_url.unwrap_or_default()
+                star=self.stargazers_count.unwrap_or_default()
+                in_progress=self.in_progress
             />
+        }
+    }
+}
+
+impl From<InProgress> for Repository {
+    fn from(value: InProgress) -> Self {
+        Self {
+            name: value.name,
+            description: value.description,
+            html_url: None,
+            stargazers_count: None,
+            language: value.language,
+            in_progress: true,
         }
     }
 }
@@ -249,27 +293,48 @@ impl Repository {
 async fn fetch_repos() -> Result<Vec<Repository>, Error> {
     let config = &CONFIG.github;
 
-    let timeout_signal = AbortSignal::timeout_with_u32(5000);
-    let response = Request::get(&config.api_url())
-        .abort_signal(Some(&timeout_signal))
-        .send()
+    let mut repos = get(&config.api_url())
+        .await?
+        .json::<Vec<Repository>>()
         .await?;
 
-    let mut repos = response.json::<Vec<Repository>>().await?;
     if !config.repos.is_empty() {
         repos.retain(|r| config.repos.contains(&r.name));
     }
 
     // add in progress projects manually
-    for item in &config.in_progress {
-        repos.push(Repository {
-            name: item.name.clone(),
-            html_url: None,
-            description: item.description.clone(),
-            stargazers_count: None,
-            in_progress: true,
-        });
+    for item in config.in_progress.clone() {
+        repos.push(item.into());
     }
 
     Ok(repos)
+}
+
+/// A linguist is a map of language names to their corresponding color.
+/// See also: https://github.com/github-linguist/linguist
+type Linguist = HashMap<String, Language>;
+
+#[derive(Debug, Clone, Deserialize)]
+struct Language {
+    color: Option<String>,
+}
+
+async fn fetch_linguist() -> Result<Linguist, Error> {
+    let url = "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml";
+
+    let text = get(url).await?.text().await?;
+    let linguist = serde_yaml::from_str(&text)?;
+
+    Ok(linguist)
+}
+
+/// Make a GET request with a 5000ms timeout
+async fn get(url: &str) -> Result<Response, Error> {
+    let timeout_signal = AbortSignal::timeout_with_u32(5000);
+    let resp = Request::get(url)
+        .abort_signal(Some(&timeout_signal))
+        .send()
+        .await?;
+
+    Ok(resp)
 }

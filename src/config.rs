@@ -49,7 +49,8 @@ impl Github {
 #[derive(Default, Debug, Clone, Deserialize)]
 pub struct InProgress {
     pub name: String,
-    pub description: String,
+    pub description: Option<String>,
+    pub language: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, Deserialize)]

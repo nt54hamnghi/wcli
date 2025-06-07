@@ -23,5 +23,6 @@ TODO: Add deployment instructions
 ## Acknowledgments
 
 Special thanks to:
+
 - **Niklas Ziermann** - for making [this video](https://www.youtube.com/watch?v=KCcU15nvFbI) that helped me get started
 - **Wensen (Vincent) Wu** - for making [LiveTerm](https://github.com/Cveinnt/LiveTerm) that inspired this project

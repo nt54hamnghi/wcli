@@ -16,8 +16,8 @@ username = "nt54hamnghi"
 repos = ["seaq", "sublist3r-rs", "wcli"]
 # List of in progress repositories (optional)
 in_progress = [
-    { name = "sev", description = "Securely inject environment variables with secrets" },
-    { name = "yrc", description = "You Remember Correctly - A memorable password generator" },
+    { name = "sev", description = "Securely inject environment variables with secrets", language = "Rust" },
+    { name = "yrc", description = "You Remember Correctly - A memorable password generator", language = "Rust" },
 ]
 
 # LinkedIn profile configuration (optional)
