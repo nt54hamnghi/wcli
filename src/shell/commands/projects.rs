@@ -106,6 +106,9 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
                     <th class="font-normal" role="columnheader">
                         STARS
                     </th>
+                    <th class="font-normal" role="columnheader">
+                        STATUS
+                    </th>
                 </tr>
             </thead>
             <tbody>{items.clone().into_iter().map(|r| r.into_row_view()).collect_view()}</tbody>
@@ -134,7 +137,8 @@ fn ProjectRow(
                         <td>{name}</td>
                         <td class="whitespace-normal max-w-[100ch]">{desc}</td>
                         <td>{lang.map(|l| view! { <Language lang=l /> })}</td>
-                        <td class="opacity-60">"In Progress"</td>
+                        <td></td>
+                        <td class="italic opacity-90">Coming Soon</td>
                     </tr>
                 },
             )
@@ -156,6 +160,7 @@ fn ProjectRow(
                             <td class="group-hover:underline">
                                 <Stargazers count=star />
                             </td>
+                            <td class="group-hover:underline">Released</td>
                         </a>
                     </tr>
                 },
@@ -181,7 +186,7 @@ fn ProjectCard(
                         <span class="text-info">{name}</span>
                         <span>{desc}</span>
                         {lang.map(|l| view! { <Language lang=l /> })}
-                        <span class="opacity-60">In Progress</span>
+                        <td class="italic opacity-90">Coming Soon</td>
                     </span>
                 },
             )
@@ -207,7 +212,7 @@ fn ProjectCard(
 }
 
 #[component]
-fn Stargazers(count: usize) -> impl IntoView {
+fn Stargazers(#[prop(optional)] count: usize) -> impl IntoView {
     view! {
         <span class="flex gap-1 items-center">
             <span class="inline-block relative bottom-[2px]">
