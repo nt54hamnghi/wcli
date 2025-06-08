@@ -25,7 +25,7 @@ pub fn Banner(#[prop(into)] visible: Signal<IsVisible>) -> impl IntoView {
                     <p class="mb-2 whitespace-pre text-primary" aria-hidden="true">
                         {ASCII_ART}
                     </p>
-                    <p>"version 0.1.0"</p>
+                    <p>"version 0.1.1"</p>
                     <p>
                         "type "<code class="text-green-theme">help</code>
                         " for a list of available commands"

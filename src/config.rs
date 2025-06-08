@@ -1,6 +1,6 @@
 use std::sync::LazyLock;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 const CONFIG_STR: &str = include_str!("../config.toml");
 
@@ -46,7 +46,7 @@ impl Github {
     }
 }
 
-#[derive(Default, Debug, Clone, Deserialize)]
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct InProgress {
     pub name: String,
     pub description: Option<String>,

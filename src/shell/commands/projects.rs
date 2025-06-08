@@ -107,107 +107,125 @@ fn ProjectTable(items: Vec<Repository>) -> impl IntoView {
                         STARS
                     </th>
                     <th class="font-normal" role="columnheader">
+                        FORKS
+                    </th>
+                    <th class="font-normal" role="columnheader">
                         STATUS
                     </th>
                 </tr>
             </thead>
-            <tbody>{items.clone().into_iter().map(|r| r.into_row_view()).collect_view()}</tbody>
+            <tbody>
+                {items.clone().into_iter().map(|r| view! { <ProjectRow repo=r /> }).collect_view()}
+            </tbody>
         </table>
 
         <div class="flex flex-col gap-2 sm:gap-4 lg:hidden" data-testid="projects-list">
-            {items.clone().into_iter().map(|r| r.into_card_view()).collect_view()}
+            {items.clone().into_iter().map(|r| view! { <ProjectCard repo=r /> }).collect_view()}
         </div>
     }
 }
 
 #[component]
-fn ProjectRow(
-    name: String,
-    desc: Option<String>,
-    lang: Option<String>,
-    #[prop(optional)] url: String,
-    #[prop(optional)] star: usize,
-    #[prop(optional)] in_progress: bool,
-) -> impl IntoView {
-    view! {
-        {if in_progress {
-            Either::Left(
-                view! {
-                    <tr>
-                        <td>{name}</td>
-                        <td class="whitespace-normal max-w-[100ch]">{desc}</td>
-                        <td>{lang.map(|l| view! { <Language lang=l /> })}</td>
-                        <td></td>
-                        <td class="italic opacity-90">Coming Soon</td>
-                    </tr>
+fn ProjectRow(repo: Repository) -> impl IntoView {
+    match repo {
+        Repository::Public {
+            released:
+                Released {
+                    name,
+                    description,
+                    html_url,
+                    stargazers_count,
+                    language,
+                    forks,
                 },
-            )
-        } else {
-            Either::Right(
-                view! {
-                    <tr>
-                        <a
-                            class="contents group"
-                            href=url
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <td class="group-hover:underline">{name}</td>
-                            <td class="whitespace-normal group-hover:underline max-w-[100ch]">
-                                {desc}
-                            </td>
-                            <td>{lang.map(|l| view! { <Language lang=l /> })}</td>
-                            <td class="group-hover:underline">
-                                <Stargazers count=star />
-                            </td>
-                            <td class="group-hover:underline">Released</td>
-                        </a>
-                    </tr>
+        } => Either::Right(view! {
+            <tr>
+                <a
+                    class="contents group"
+                    href=html_url
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <td class="group-hover:underline">{name}</td>
+                    <td class="whitespace-normal group-hover:underline max-w-[100ch]">
+                        {description}
+                    </td>
+                    <td>{language.map(|l| view! { <Language lang=l /> })}</td>
+                    <td class="group-hover:underline">
+                        <Stargazers count=stargazers_count />
+                    </td>
+                    <td class="group-hover:underline">
+                        <Forks count=forks />
+                    </td>
+                    <td class="group-hover:underline">Released</td>
+                </a>
+            </tr>
+        }),
+        Repository::Private {
+            in_progress:
+                InProgress {
+                    name,
+                    description,
+                    language,
                 },
-            )
-        }}
+        } => Either::Left(view! {
+            <tr>
+                <td>{name}</td>
+                <td class="whitespace-normal max-w-[100ch]">{description}</td>
+                <td>{language.map(|l| view! { <Language lang=l /> })}</td>
+                // no stargazers_count
+                <td></td>
+                // no forks
+                <td></td>
+                <td class="italic opacity-90">Coming Soon</td>
+            </tr>
+        }),
     }
 }
 
 #[component]
-fn ProjectCard(
-    name: String,
-    desc: Option<String>,
-    lang: Option<String>,
-    #[prop(optional)] url: String,
-    #[prop(optional)] star: usize,
-    #[prop(optional)] in_progress: bool,
-) -> impl IntoView {
-    view! {
-        {if in_progress {
-            Either::Left(
-                view! {
-                    <span class="flex flex-col gap-1 sm:gap-0">
-                        <span class="text-info">{name}</span>
-                        <span>{desc}</span>
-                        {lang.map(|l| view! { <Language lang=l /> })}
-                        <td class="italic opacity-90">Coming Soon</td>
-                    </span>
+fn ProjectCard(repo: Repository) -> impl IntoView {
+    match repo {
+        Repository::Public {
+            released:
+                Released {
+                    name,
+                    description,
+                    html_url,
+                    stargazers_count,
+                    language,
+                    forks,
                 },
-            )
-        } else {
-            Either::Right(
-                view! {
-                    <a
-                        class="flex flex-col gap-1 sm:gap-0 group"
-                        href=url
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span class="group-hover:underline text-info">{name}</span>
-                        <span>{desc}</span>
-                        <span class="flex gap-2 items-center">
-                            {lang.map(|l| view! { <Language lang=l /> })} <Stargazers count=star />
-                        </span>
-                    </a>
+        } => Either::Left(view! {
+            <a
+                class="flex flex-col gap-1 sm:gap-0 group"
+                href=html_url
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <span class="group-hover:underline text-info">{name}</span>
+                <span>{description}</span>
+                <span class="flex gap-2 items-center">
+                    {language.map(|l| view! { <Language lang=l /> })}
+                    <Stargazers count=stargazers_count /> <Forks count=forks />
+                </span>
+            </a>
+        }),
+        Repository::Private {
+            in_progress:
+                InProgress {
+                    name,
+                    description,
+                    language,
                 },
-            )
-        }}
+        } => Either::Right(view! {
+            <span class="flex flex-col gap-1 sm:gap-0">
+                <span class="text-info">{name}</span>
+                <span>{description}</span>
+                {language.map(|l| view! { <Language lang=l /> })}
+                <td class="italic opacity-90">Coming Soon</td>
+            </span>
+        }),
     }
 }
 
@@ -217,6 +235,18 @@ fn Stargazers(#[prop(optional)] count: usize) -> impl IntoView {
         <span class="flex gap-1 items-center">
             <span class="inline-block relative bottom-[2px]">
                 <Icon icon=i::FaStarRegular height="1rem" width="1rem" />
+            </span>
+            <span>{count}</span>
+        </span>
+    }
+}
+
+#[component]
+fn Forks(#[prop(optional)] count: usize) -> impl IntoView {
+    view! {
+        <span class="flex gap-1 items-center">
+            <span class="inline-block relative bottom-[2px]">
+                <Icon icon=i::FaCodeForkSolid height="1rem" width="1rem" />
             </span>
             <span>{count}</span>
         </span>
@@ -244,54 +274,31 @@ fn Language(lang: String) -> impl IntoView {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct Repository {
+#[serde(from = "Released", tag = "status", rename_all = "lowercase")]
+enum Repository {
+    Public {
+        #[serde(flatten)]
+        released: Released,
+    },
+    Private {
+        #[serde(flatten)]
+        in_progress: InProgress,
+    },
+}
+
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+struct Released {
     name: String,
     description: Option<String>,
-    html_url: Option<String>,
-    stargazers_count: Option<usize>,
+    html_url: String,
+    stargazers_count: usize,
     language: Option<String>,
-    #[serde(skip_deserializing)]
-    in_progress: bool,
+    forks: usize,
 }
 
-impl Repository {
-    fn into_row_view(self) -> impl IntoView {
-        view! {
-            <ProjectRow
-                name=self.name
-                desc=self.description
-                lang=self.language
-                url=self.html_url.unwrap_or_default()
-                star=self.stargazers_count.unwrap_or_default()
-                in_progress=self.in_progress
-            />
-        }
-    }
-
-    fn into_card_view(self) -> impl IntoView {
-        view! {
-            <ProjectCard
-                name=self.name
-                desc=self.description
-                lang=self.language
-                url=self.html_url.unwrap_or_default()
-                star=self.stargazers_count.unwrap_or_default()
-                in_progress=self.in_progress
-            />
-        }
-    }
-}
-
-impl From<InProgress> for Repository {
-    fn from(value: InProgress) -> Self {
-        Self {
-            name: value.name,
-            description: value.description,
-            html_url: None,
-            stargazers_count: None,
-            language: value.language,
-            in_progress: true,
-        }
+impl From<Released> for Repository {
+    fn from(released: Released) -> Self {
+        Repository::Public { released }
     }
 }
 
@@ -304,12 +311,20 @@ async fn fetch_repos() -> Result<Vec<Repository>, Error> {
         .await?;
 
     if !config.repos.is_empty() {
-        repos.retain(|r| config.repos.contains(&r.name));
+        // only include repositories listed in the config
+        repos.retain(|r| {
+            match r {
+                Repository::Public { released } => config.repos.contains(&released.name),
+                // `#[serde(from = "Released")]` deserializes the response into `Released`
+                // before converting to `Repository`, so `Private` variants are not possible
+                Repository::Private { .. } => unreachable!(),
+            }
+        });
     }
 
     // add in progress projects manually
     for item in config.in_progress.clone() {
-        repos.push(item.into());
+        repos.push(Repository::Private { in_progress: item });
     }
 
     Ok(repos)
