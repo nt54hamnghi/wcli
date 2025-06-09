@@ -16,7 +16,7 @@ frontend = [
 ]
 backend = [
     { name = "rust", icon = "FaRustBrands", color = "#c45508" },
-    { name = "zig", icon = "SiZig", color = "#f7a41d" },
+    # { name = "zig", icon = "SiZig", color = "#f7a41d" },
     { name = "go", icon = "FaGolangBrands", color = "#00add8" },
     { name = "python", icon = "FaPythonBrands", color = "#3572a5" },
     { name = "postgresql", icon = "SiPostgresql", color = "#4169e1" },

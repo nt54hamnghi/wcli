@@ -30,7 +30,10 @@ impl Command for Stack {
 fn StackSection(title: String, items: Vec<StackItem>) -> impl IntoView {
     view! {
         <div>
-            <h3 class="pb-1 text-primary">{title.to_uppercase()}</h3>
+            <h3 class="flex gap-2 items-center pb-1">
+                <span class="font-bold text-primary">">"</span>
+                <span>{title.to_uppercase()}</span>
+            </h3>
             <div class="flex flex-wrap gap-4">
                 {items.into_iter().map(|i| view! { <StackBadge item=i /> }).collect_view()}
             </div>
