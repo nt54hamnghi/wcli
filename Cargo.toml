@@ -1,6 +1,6 @@
 [package]
 name = "wcli"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 authors = ["nt54hamnghi <hamnghi250699@gmail.com>"]
 
@@ -10,8 +10,9 @@ authors = ["nt54hamnghi <hamnghi250699@gmail.com>"]
 leptos = { version = "0.7", features = ["csr"] }
 leptos_meta = "0.7"
 leptos_icons = "0.5.0"
-icondata = { version = "0.5.0", default-features = false, features = [
+icondata = { version = "0.6.0", default-features = false, features = [
     "font-awesome",
+    "simple-icons",
 ] }
 console_log = "1"
 log = "0.4"
@@ -32,6 +33,7 @@ toml = "0.8.22"
 strum = { version = "0.27.1", features = ["derive"] }
 fastrand = { version = "2.3.0", features = ["js"] }
 serde_yaml = "0.9.34"
+phf = "0.11.3"
 
 [dev-dependencies]
 wasm-bindgen = "0.2"
@@ -52,3 +54,7 @@ unsafe_code = { priority = 5, level = "forbid" }
 all = { priority = -1, level = "deny" }
 pedantic = { priority = -1, level = "allow" }
 restriction = { priority = -1, level = "allow" }
+
+[build-dependencies]
+phf = { version = "0.11.3", default-features = false }
+phf_codegen = { version = "0.11.3", default-features = false }

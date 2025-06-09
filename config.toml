@@ -6,20 +6,39 @@ email = "hamnghi.nguyentrieu@gmail.com"
 hostname = "hamnghi.computer"
 username = "guest"
 
-# GitHub profile configuration
+# Icons from: https://carloskiki.github.io/icondata/
+# Only supports Font Awesome and Simple Icons
+[stack]
+frontend = [
+    { name = "leptos", icon = "SiLeptos", color = "#262577" },
+    { name = "html", icon = "FaHtml5Brands", color = "#e34c26" },
+    { name = "tailwindcss", icon = "SiTailwindcss", color = "#06b6d4" },
+]
+backend = [
+    { name = "rust", icon = "FaRustBrands", color = "#c45508" },
+    { name = "zig", icon = "SiZig", color = "#f7a41d" },
+    { name = "go", icon = "FaGolangBrands", color = "#00add8" },
+    { name = "python", icon = "FaPythonBrands", color = "#3572a5" },
+    { name = "postgresql", icon = "SiPostgresql", color = "#4169e1" },
+]
+devops = [
+    { name = "aws", icon = "FaAwsBrands", color = "#ff9900" },
+    { name = "docker", icon = "FaDockerBrands", color = "#2496ed" },
+    { name = "kubernetes", icon = "SiKubernetes", color = "#326ce5" },
+]
+tools = [
+    { name = "git", icon = "FaGitAltBrands", color = "#f05032" },
+    { name = "github", icon = "FaGithubBrands" },
+    { name = "github-actions", icon = "SiGithubactions", color = "#2088ff" },
+]
+
 [github]
-# Username is used for displaying profile information in the `fetch` command
-# and for loading repository data in the `projects` command (https://api.github.com/users/{username}/repos)
 username = "nt54hamnghi"
-# List of specific repositories to display in the `fetch` command
-# Omit this field to include all repositories from the API
 repos = ["seaq", "sublist3r-rs", "wcli"]
-# List of in progress repositories (optional)
 in_progress = [
     { name = "sev", description = "Securely inject environment variables with secrets", language = "Rust" },
     { name = "yrc", description = "You Remember Correctly - A memorable password generator", language = "Rust" },
 ]
 
-# LinkedIn profile configuration (optional)
 [linkedin]
 username = "hamnghi"

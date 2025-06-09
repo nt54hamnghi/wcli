@@ -8,6 +8,7 @@ use self::echo::Echo;
 use self::fetch::Fetch;
 use self::help::Help;
 use self::projects::Projects;
+use self::stack::Stack;
 use self::theme::Theme;
 
 pub mod ack;
@@ -16,6 +17,7 @@ pub mod echo;
 pub mod fetch;
 pub mod help;
 pub mod projects;
+pub mod stack;
 pub mod theme;
 
 #[derive(Debug, Clone, Copy, EnumString, EnumIter, Display, VariantNames)]
@@ -27,6 +29,7 @@ pub enum Palette {
     Fetch,
     Help,
     Projects,
+    Stack,
     Theme,
 }
 
@@ -43,6 +46,7 @@ impl Palette {
             Self::Fetch => Fetch::run(args, set_pending).into_any(),
             Self::Help => Help::run(args, set_pending).into_any(),
             Self::Projects => Projects::run(args, set_pending).into_any(),
+            Self::Stack => Stack::run(args, set_pending).into_any(),
             Self::Theme => Theme::run(args, set_pending).into_any(),
         }
     }
@@ -56,6 +60,7 @@ impl Palette {
             Self::Fetch => Fetch::help().into_any(),
             Self::Help => Help::help().into_any(),
             Self::Projects => Projects::help().into_any(),
+            Self::Stack => Stack::help().into_any(),
             Self::Theme => Theme::help().into_any(),
         }
     }
@@ -70,6 +75,7 @@ impl Palette {
             Self::Help => (Help::NAME, Help::DESCRIPTION),
             Self::Theme => (Theme::NAME, Theme::DESCRIPTION),
             Self::Projects => (Projects::NAME, Projects::DESCRIPTION),
+            Self::Stack => (Stack::NAME, Stack::DESCRIPTION),
         };
 
         view! {
