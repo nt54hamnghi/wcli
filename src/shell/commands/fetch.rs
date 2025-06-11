@@ -4,7 +4,7 @@ use leptos::reactive::wrappers::write::SignalSetter;
 use leptos_icons::Icon;
 
 use super::Command;
-use crate::config::{CONFIG, Config};
+use crate::config::CONFIG;
 
 pub struct Fetch;
 
@@ -54,14 +54,11 @@ fn FetchLogo() -> impl IntoView {
 
 #[component]
 fn FetchDetails() -> impl IntoView {
-    let Config {
-        name,
-        email,
-        github,
-        linkedin,
-        youtube,
-        ..
-    } = CONFIG.clone();
+    let name = CONFIG.name.as_str();
+    let email = CONFIG.email.as_str();
+    let github = &CONFIG.github;
+    let linkedin = CONFIG.linkedin.as_ref();
+    let youtube = CONFIG.youtube.as_ref();
 
     view! {
         <div class="flex flex-col gap-0 py-4 border-y">
@@ -78,7 +75,7 @@ fn FetchDetails() -> impl IntoView {
                     target="_blank"
                     class="hover:underline text-orange-theme"
                 >
-                    {email.clone()}
+                    {email}
                 </a>
             </p>
             <p class="flex gap-2 items-center">

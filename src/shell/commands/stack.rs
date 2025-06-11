@@ -17,9 +17,7 @@ impl Command for Stack {
         let stack = CONFIG
             .stack
             .iter()
-            .map(
-                |(title, items)| view! { <StackSection title=title.clone() items=items.clone() /> },
-            )
+            .map(|(title, items)| view! { <StackSection title=title items=items /> })
             .collect_view();
 
         Some(view! { <div class="flex flex-col gap-6">{stack}</div> })
@@ -27,7 +25,7 @@ impl Command for Stack {
 }
 
 #[component]
-fn StackSection(title: String, items: Vec<StackItem>) -> impl IntoView {
+fn StackSection(title: &'static str, items: &'static [StackItem]) -> impl IntoView {
     view! {
         <div>
             <h3 class="flex gap-2 items-center pb-1">
@@ -35,16 +33,18 @@ fn StackSection(title: String, items: Vec<StackItem>) -> impl IntoView {
                 <span>{title.to_uppercase()}</span>
             </h3>
             <div class="flex flex-wrap gap-4">
-                {items.into_iter().map(|i| view! { <StackBadge item=i /> }).collect_view()}
+                {items.iter().map(|i| view! { <StackBadge item=i /> }).collect_view()}
             </div>
         </div>
     }
 }
 
 #[component]
-fn StackBadge(item: StackItem) -> impl IntoView {
-    let StackItem { name, icon, color } = item;
-    let color = color.unwrap_or("var(--color-white)".to_owned());
+fn StackBadge(item: &'static StackItem) -> impl IntoView {
+    let name = item.name.as_str();
+    let icon = item.icon;
+    let color = item.color.as_deref().unwrap_or("var(--color-white)");
+
     view! {
         <div
             class="flex gap-2 items-center py-2 px-3 rounded-md border text-foreground"

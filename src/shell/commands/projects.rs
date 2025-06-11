@@ -140,12 +140,7 @@ fn ProjectRow(repo: Repository) -> impl IntoView {
                 },
         } => Either::Right(view! {
             <tr>
-                <a
-                    class="contents group"
-                    href=html_url
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
+                <a class="contents group" href=html_url target="_blank" rel="noopener noreferrer">
                     <td class="group-hover:underline">{name}</td>
                     <td class="whitespace-normal group-hover:underline max-w-[100ch]">
                         {description}

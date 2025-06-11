@@ -4,8 +4,8 @@ use crate::config::CONFIG;
 
 #[component]
 pub fn Prompt(
-    #[prop(into, default = CONFIG.prompt.username.clone())] user: String,
-    #[prop(into, default = CONFIG.prompt.hostname.clone())] host: String,
+    #[prop(default = CONFIG.prompt.username.as_str())] user: &'static str,
+    #[prop(default = CONFIG.prompt.hostname.as_str())] host: &'static str,
     #[prop(default = ":~$")] prefix: &'static str,
     #[prop(optional)] value: String,
 ) -> impl IntoView {

@@ -15,7 +15,7 @@ mod stores;
 pub fn App() -> impl IntoView {
     view! {
         // sets the document title
-        <Title text=CONFIG.title.clone() />
+        <Title text=CONFIG.title.as_str() />
         <Home />
     }
 }
